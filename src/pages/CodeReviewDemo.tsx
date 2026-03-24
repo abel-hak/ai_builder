@@ -3,6 +3,10 @@ import { ArrowLeft, Code2, Loader2, Sparkles, Copy, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { streamAI } from "@/lib/ai-stream";
 import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const sampleCode = `function fetchUserData(userId) {
   const response = fetch('/api/users/' + userId);
@@ -102,8 +106,31 @@ const CodeReviewDemo = () => {
             </div>
             <div className="flex-1 p-5 overflow-auto">
               {review ? (
-                <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
-                  {review}
+                <div className="prose prose-sm prose-invert max-w-none text-sm leading-relaxed text-foreground/90">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      code({ node, inline, className, children, ...props }: any) {
+                        const match = /language-(\w+)/.exec(className || "");
+                        return !inline && match ? (
+                          <SyntaxHighlighter
+                            style={vscDarkPlus as any}
+                            language={match[1]}
+                            PreTag="div"
+                            {...props}
+                          >
+                            {String(children).replace(/\n$/, "")}
+                          </SyntaxHighlighter>
+                        ) : (
+                          <code className="bg-secondary px-1.5 py-0.5 rounded-md text-primary" {...props}>
+                            {children}
+                          </code>
+                        );
+                      },
+                    }}
+                  >
+                    {review}
+                  </ReactMarkdown>
                 </div>
               ) : (
                 <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
