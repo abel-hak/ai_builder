@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ArrowLeft, Code2, Loader2, Sparkles, Copy, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowLeft, Code2, Loader2, Sparkles, Copy, Check, History } from "lucide-react";
 import { Link } from "react-router-dom";
 import { streamAI } from "@/lib/ai-stream";
 import { toast } from "sonner";
@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { supabase } from "@/lib/supabase";
 
 const sampleCode = `function fetchUserData(userId) {
   const response = fetch('/api/users/' + userId);
@@ -26,6 +27,20 @@ const CodeReviewDemo = () => {
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [history, setHistory] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchHistory();
+  }, []);
+
+  const fetchHistory = async () => {
+    const { data } = await supabase
+      .from("generations")
+      .select("*")
+      .eq("type", "code-review")
+      .order("created_at", { ascending: false });
+    if (data) setHistory(data);
+  };
 
   const handleReview = async () => {
     if (!code.trim()) return;
@@ -40,7 +55,21 @@ const CodeReviewDemo = () => {
         result += chunk;
         setReview(result);
       },
-      onDone: () => setLoading(false),
+      onDone: async () => {
+        setLoading(false);
+        // Save result directly to Supabase history
+        const { error } = await supabase.from("generations").insert({
+          type: "code-review",
+          input_text: code,
+          output_text: result,
+        });
+
+        if (!error) {
+          fetchHistory();
+        } else {
+          console.error("Failed to save history:", error);
+        }
+      },
       onError: (err) => toast.error(err),
     });
   };
@@ -71,79 +100,113 @@ const CodeReviewDemo = () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-2 gap-6 h-[calc(100vh-10rem)]">
-          {/* Code Input */}
-          <div className="flex flex-col rounded-2xl border border-border bg-card overflow-hidden">
-            <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">Paste your code</span>
-              <button
-                onClick={handleReview}
-                disabled={loading || !code.trim()}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-              >
-                {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
-                {loading ? "Analyzing..." : "Review Code"}
-              </button>
+        <div className="grid lg:grid-cols-4 gap-6 h-[calc(100vh-10rem)]">
+
+          {/* History Sidebar */}
+          <div className="col-span-1 flex flex-col rounded-2xl border border-border bg-card overflow-hidden">
+            <div className="px-5 py-3 border-b border-border flex items-center gap-2">
+              <History size={16} className="text-primary" />
+              <span className="text-sm font-medium text-foreground">History</span>
             </div>
-            <textarea
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="Paste your code here..."
-              className="flex-1 p-5 bg-transparent text-sm font-mono resize-none focus:outline-none text-foreground placeholder:text-muted-foreground"
-              spellCheck={false}
-            />
+            <div className="flex-1 p-3 overflow-auto flex flex-col gap-2">
+              {history.length === 0 ? (
+                <div className="text-xs text-muted-foreground text-center p-4">No past reviews yet. (Make sure your Supabase table is created!)</div>
+              ) : (
+                history.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setCode(item.input_text);
+                      setReview(item.output_text);
+                    }}
+                    className="text-left p-3 rounded-lg border border-border bg-background hover:border-primary/50 hover:bg-secondary/20 transition-all text-xs group"
+                  >
+                    <div className="font-medium text-foreground mb-1 line-clamp-2 leading-relaxed group-hover:text-primary transition-colors">
+                      {item.input_text}
+                    </div>
+                    <div className="text-muted-foreground opacity-60">
+                      {new Date(item.created_at).toLocaleDateString()} at {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
           </div>
 
-          {/* Review Output */}
-          <div className="flex flex-col rounded-2xl border border-border bg-card overflow-hidden">
-            <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">Review Results</span>
-              {review && (
-                <button onClick={copyReview} className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground">
-                  {copied ? <Check size={14} className="text-primary" /> : <Copy size={14} />}
+          <div className="col-span-3 grid lg:grid-cols-2 gap-6 h-full">
+            {/* Code Input */}
+            <div className="flex flex-col rounded-2xl border border-border bg-card overflow-hidden">
+              <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Paste your code</span>
+                <button
+                  onClick={handleReview}
+                  disabled={loading || !code.trim()}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+                >
+                  {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                  {loading ? "Analyzing..." : "Review Code"}
                 </button>
-              )}
+              </div>
+              <textarea
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Paste your code here..."
+                className="flex-1 p-5 bg-transparent text-sm font-mono resize-none focus:outline-none text-foreground placeholder:text-muted-foreground"
+                spellCheck={false}
+              />
             </div>
-            <div className="flex-1 p-5 overflow-auto">
-              {review ? (
-                <div className="prose prose-sm prose-invert max-w-none text-sm leading-relaxed text-foreground/90">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    components={{
-                      code({ node, inline, className, children, ...props }: any) {
-                        const match = /language-(\w+)/.exec(className || "");
-                        return !inline && match ? (
-                          <SyntaxHighlighter
-                            style={vscDarkPlus as any}
-                            language={match[1]}
-                            PreTag="div"
-                            {...props}
-                          >
-                            {String(children).replace(/\n$/, "")}
-                          </SyntaxHighlighter>
-                        ) : (
-                          <code className="bg-secondary px-1.5 py-0.5 rounded-md text-primary" {...props}>
-                            {children}
-                          </code>
-                        );
-                      },
-                    }}
-                  >
-                    {review}
-                  </ReactMarkdown>
-                </div>
-              ) : (
-                <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-                  {loading ? (
-                    <div className="flex items-center gap-3">
-                      <Loader2 className="animate-spin" size={20} />
-                      <span>Analyzing code for issues...</span>
-                    </div>
-                  ) : (
-                    "Click 'Review Code' to get an expert analysis"
-                  )}
-                </div>
-              )}
+
+            {/* Review Output */}
+            <div className="flex flex-col rounded-2xl border border-border bg-card overflow-hidden">
+              <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Review Results</span>
+                {review && (
+                  <button onClick={copyReview} className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground">
+                    {copied ? <Check size={14} className="text-primary" /> : <Copy size={14} />}
+                  </button>
+                )}
+              </div>
+              <div className="flex-1 p-5 overflow-auto">
+                {review ? (
+                  <div className="prose prose-sm prose-invert max-w-none text-sm leading-relaxed text-foreground/90">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        code({ node, inline, className, children, ...props }: any) {
+                          const match = /language-(\w+)/.exec(className || "");
+                          return !inline && match ? (
+                            <SyntaxHighlighter
+                              style={vscDarkPlus as any}
+                              language={match[1]}
+                              PreTag="div"
+                              {...props}
+                            >
+                              {String(children).replace(/\n$/, "")}
+                            </SyntaxHighlighter>
+                          ) : (
+                            <code className="bg-secondary px-1.5 py-0.5 rounded-md text-primary" {...props}>
+                              {children}
+                            </code>
+                          );
+                        },
+                      }}
+                    >
+                      {review}
+                    </ReactMarkdown>
+                  </div>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
+                    {loading ? (
+                      <div className="flex items-center gap-3">
+                        <Loader2 className="animate-spin" size={20} />
+                        <span>Analyzing code for issues...</span>
+                      </div>
+                    ) : (
+                      "Click 'Review Code' to get an expert analysis"
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
