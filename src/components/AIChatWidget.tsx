@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, Loader2, Bot } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { streamAI, Msg } from "@/lib/ai-stream";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 const AIChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +42,14 @@ const AIChatWidget = () => {
         assistantContent += chunk;
         setMessages([...newMessages, { role: "assistant", content: assistantContent }]);
       },
-      onDone: () => setIsLoading(false),
+      onDone: async () => {
+        setIsLoading(false);
+        // Log the interaction silently to Supabase
+        await supabase.from("chat_logs").insert({
+          user_message: input.trim(),
+          ai_response: assistantContent
+        });
+      },
       onError: (err) => {
         setMessages([...newMessages, { role: "assistant", content: `Oops, something went wrong: ${err}` }]);
         setIsLoading(false);
