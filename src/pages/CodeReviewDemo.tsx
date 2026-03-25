@@ -8,6 +8,10 @@ import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { supabase } from "@/lib/supabase";
+import Editor from "react-simple-code-editor";
+import Prism from "prismjs";
+import "prismjs/components/prism-javascript";
+import "prismjs/themes/prism-tomorrow.css";
 
 const sampleCode = `function fetchUserData(userId) {
   const response = fetch('/api/users/' + userId);
@@ -147,13 +151,19 @@ const CodeReviewDemo = () => {
                   {loading ? "Analyzing..." : "Review Code"}
                 </button>
               </div>
-              <textarea
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="Paste your code here..."
-                className="flex-1 p-5 bg-transparent text-sm font-mono resize-none focus:outline-none text-foreground placeholder:text-muted-foreground"
-                spellCheck={false}
-              />
+              <div className="flex-1 overflow-auto bg-black/20">
+                <Editor
+                  value={code}
+                  onValueChange={(newCode) => setCode(newCode)}
+                  highlight={(code) => Prism.highlight(code, Prism.languages.javascript, "javascript")}
+                  padding={20}
+                  className="font-mono text-sm min-h-full focus:outline-none"
+                  textareaClassName="focus:outline-none placeholder:text-muted-foreground"
+                  style={{
+                    fontFamily: '"Fira Code", "Consolas", monospace',
+                  }}
+                />
+              </div>
             </div>
 
             {/* Review Output */}
