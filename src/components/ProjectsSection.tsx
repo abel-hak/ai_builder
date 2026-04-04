@@ -6,29 +6,55 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 
 const projects = [
   {
-    title: "AI Document Analyzer",
-    desc: "RAG-powered document analysis platform. Upload PDFs, ask questions, get AI-generated insights with source citations.",
-    tags: ["React", "Python", "LangChain", "OpenAI", "PostgreSQL", "Docker"],
+    title: "Cher.et — Full-stack Platform",
+    desc: "Co-owned a full-stack platform transforming manual workflows into automated digital systems supporting 30,000+ active users.",
+    tags: ["Full-Stack", "APIs", "System Scale", "Product"],
     icon: FileSearch,
     gradient: "from-primary/20 to-primary/5",
     featured: true,
     caseStudy: {
-      problem: "Enterprise teams waste thousands of hours manually extracting clauses from dense contracts and technical PDFs.",
-      solution: "A Retrieval-Augmented Generation (RAG) pipeline that ingests documents, vectorizes them, and grounds AI responses directly to the source text.",
-      tech: "Built with a React frontend and Python/FastAPI backend. LangChain orchestrates the LLM calls, storing document embeddings in pgvector (PostgreSQL). The entire infrastructure is containerized in Docker for horizontal scaling."
+      problem: "Manual, fragmented workflows were severely bottlenecking operational scale and limiting system utility.",
+      solution: "Engineered a robust full-stack automated digital workflow system capable of handling 30,000+ concurrent users with zero downtime.",
+      tech: "Built scalable internal/external APIs, executed deep business logic, and integrated high-throughput third-party services to automate manual data processing pipelines."
     }
   },
   {
-    title: "Real-time Chat with AI Moderation",
-    desc: "WebSocket chat application with AI-powered content moderation, sentiment analysis, and auto-translation.",
-    tags: ["Next.js", "Socket.io", "NLP", "Redis", "TypeScript"],
-    icon: MessageSquare,
+    title: "CodeQuest — AI-Powered Learning",
+    desc: "Full-stack web platform enabling users to learn Python by actively debugging broken code rather than passively reading tutorials.",
+    tags: ["React", "TypeScript", "FastAPI", "PostgreSQL"],
+    icon: Code2,
     gradient: "from-accent/20 to-accent/5",
     featured: true,
     caseStudy: {
-      problem: "Online platforms struggle to scale human moderation as their user base grows, leading to toxic environments.",
-      solution: "An intelligent WebSocket middleware layer that intercepts messages and classifies them for toxicity in under 200ms.",
-      tech: "Built on Next.js and Socket.io. A secure Node.js backend queues high-volume messages via Redis, streaming them to a fine-tuned NLP model for instant classification before broadcasting them to active clients."
+      problem: "Classical coding tutorials proved passive and unengaging for beginners trying to master Python context loops and debugging.",
+      solution: "An interactive, AI-powered platform where learners are presented with organically generated 'broken' code to debug in real time.",
+      tech: "Built with React and TypeScript on the frontend, securely communicating with a high-performance Python FastAPI backend, persisting data into PostgreSQL."
+    }
+  },
+  {
+    title: "JobGen — AI Remote Job Finder",
+    desc: "Flutter mobile app improving job-matching by 30% through advanced AI integration and complex core modules including auth and chatbots.",
+    tags: ["Flutter", "BLoC", "Clean Architecture", "AI Integration"],
+    icon: MessageSquare,
+    gradient: "from-primary/20 to-accent/5",
+    featured: true,
+    caseStudy: {
+      problem: "Current remote job apps suffered from severe performance bottlenecks, low offline availability, and highly inaccurate AI matching.",
+      solution: "A cleanly architected mobile app that optimized API calls/caching to boost load times by 25% and delivered fully functional offline access.",
+      tech: "Implemented strict Clean Architecture and BLoC state management in Flutter, reducing bugs by 40% during testing. Collaborated tightly with backend AI models for a 30% improvement in match accuracy."
+    }
+  },
+  {
+    title: "Smart Personal Finance Platform",
+    desc: "ETB-first robust financial dashboard driving AI-based expense categorization with 80% real-time accuracy and native SMS ingestion.",
+    tags: ["Flutter", "Kotlin", "React", "Supabase Edge Functions"],
+    icon: BarChart3,
+    gradient: "from-accent/20 to-primary/10",
+    featured: true,
+    caseStudy: {
+      problem: "No localized personal finance apps seamlessly integrated bank, mobile-money, and cash transactions natively for Ethiopian (ETB) contexts.",
+      solution: "A unified analytics view offering JWT-authenticated APIs, real-time dashboards, and automated transaction categorization.",
+      tech: "Used Flutter and React on the UI layer. Powered by Supabase (Postgres + AI Edge Functions). Engineered a native mobile SMS ingestion module in Kotlin that easily parses 100+ transactions/day on mobile endpoints."
     }
   },
   {

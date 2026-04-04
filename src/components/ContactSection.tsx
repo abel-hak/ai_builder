@@ -1,6 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { Send, Mail, MapPin, Clock } from "lucide-react";
+import { Send, Mail, MapPin, Phone } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -49,9 +49,9 @@ const ContactSection = () => {
             className="space-y-8"
           >
             {[
-              { icon: Mail, label: "Email", value: "hello@example.com" },
-              { icon: MapPin, label: "Location", value: "Available Worldwide (Remote)" },
-              { icon: Clock, label: "Response Time", value: "Within 24 hours" },
+              { icon: Mail, label: "Email", value: "erddunoabel47@gmail.com" },
+              { icon: MapPin, label: "Location", value: "Addis Ababa, Ethiopia (Remote Available)" },
+              { icon: Phone, label: "Phone", value: "+251995527848" },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label} className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">

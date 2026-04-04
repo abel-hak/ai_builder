@@ -31,9 +31,9 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95] mb-6"
         >
-          Hi, I'm <span className="text-gradient-primary">Abel Erduno</span>
+          Hi, I'm <span className="text-gradient-primary">Abel Erduno Hakenso</span>
           <br />
-          <span className="text-foreground/80 text-4xl md:text-5xl lg:text-6xl">Full-Stack Developer &amp; AI Engineer</span>
+          <span className="text-foreground/80 text-4xl md:text-5xl lg:text-6xl">Software Engineer</span>
         </motion.h1>
 
         <motion.p
@@ -42,8 +42,8 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
         >
-          I build scalable web applications and integrate intelligent AI solutions.
-          From React frontends to Python ML pipelines — I ship end-to-end.
+          I build robust mobile & web applications and integrate intelligent AI solutions.
+          From scalable Flutter frontends to Python ML pipelines — I ship end-to-end.
         </motion.p>
 
         <motion.div
@@ -64,6 +64,13 @@ const HeroSection = () => {
           >
             Get In Touch
           </a>
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            className="border border-primary/20 bg-primary/10 text-primary px-8 py-3 rounded-full font-medium hover:bg-primary/20 transition-colors"
+          >
+            Download CV
+          </a>
         </motion.div>
 
         <motion.div
@@ -73,9 +80,9 @@ const HeroSection = () => {
           className="flex items-center justify-center gap-6"
         >
           {[
-            { icon: Github, href: "https://github.com", label: "GitHub" },
-            { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-            { icon: Mail, href: "mailto:hello@example.com", label: "Email" },
+            { icon: Github, href: "https://github.com/", label: "GitHub" },
+            { icon: Linkedin, href: "https://linkedin.com/in/", label: "LinkedIn" },
+            { icon: Mail, href: "mailto:erddunoabel47@gmail.com", label: "Email" },
           ].map(({ icon: Icon, href, label }) => (
             <a
               key={label}

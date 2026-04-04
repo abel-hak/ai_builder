@@ -3,20 +3,20 @@ import { useRef } from "react";
 
 const skillCategories = [
   {
-    title: "Frontend",
-    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Redux"],
+    title: "Languages",
+    skills: ["Python", "JavaScript", "TypeScript", "Dart", "C++", "Java", "PHP", "Assembly"],
   },
   {
-    title: "Backend",
-    skills: ["Node.js", "Python", "FastAPI", "Express", "GraphQL", "REST APIs"],
+    title: "Frameworks / Libs",
+    skills: ["Flutter", "React", "Next.js", "Node.js", "Django", "FastAPI", "Tailwind CSS"],
   },
   {
-    title: "AI / ML",
-    skills: ["OpenAI / GPT", "LangChain", "RAG", "NLP", "TensorFlow", "Vector DBs"],
+    title: "Database & Backend",
+    skills: ["Supabase", "PostgreSQL", "MongoDB", "Firebase", "Redis", "Docker", "AWS"],
   },
   {
-    title: "Database & Infra",
-    skills: ["PostgreSQL", "MongoDB", "Redis", "Docker", "AWS", "CI/CD"],
+    title: "Tools & Others",
+    skills: ["Git", "Jira", "Figma", "Google Play Console", "OpenAI / LangChain", "RAG"],
   },
 ];
 
@@ -78,10 +78,10 @@ const SkillsSection = () => {
           className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16"
         >
           {[
-            { label: "Projects Completed", value: "30+" },
-            { label: "Happy Clients", value: "20+" },
-            { label: "Years Experience", value: "4+" },
-            { label: "AI Models Deployed", value: "10+" },
+            { label: "Projects Completed", value: "10+" },
+            { label: "Users Impacted", value: "30k+" },
+            { label: "Years Experience", value: "3+" },
+            { label: "LeetCode Solved", value: "400+" },
           ].map((stat) => (
             <div key={stat.label} className="text-center p-6 rounded-2xl border border-border bg-card/50">
               <div className="text-3xl md:text-4xl font-bold text-gradient-primary mb-2">{stat.value}</div>
