@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 const navItems = [
   { label: "About", href: "#about" },
@@ -44,6 +45,7 @@ const Navbar = () => {
               {item.label}
             </a>
           ))}
+          <ThemeToggle />
           <a
             href="#contact"
             className="bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-medium hover:brightness-110 transition-all"
@@ -81,13 +83,16 @@ const Navbar = () => {
                   {item.label}
                 </a>
               ))}
-              <a
-                href="#contact"
-                onClick={() => setMobileOpen(false)}
-                className="bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-medium text-center"
-              >
-                Hire Me
-              </a>
+              <div className="flex items-center justify-between">
+                <a
+                  href="#contact"
+                  onClick={() => setMobileOpen(false)}
+                  className="bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-medium text-center flex-1"
+                >
+                  Hire Me
+                </a>
+                <ThemeToggle />
+              </div>
             </div>
           </motion.div>
         )}
