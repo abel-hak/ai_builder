@@ -1,16 +1,15 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { ExternalLink, Github, MessageSquare, BarChart3, Code2, PenTool, FileSearch, Languages, BookOpen } from "lucide-react";
+import { ExternalLink, MessageSquare, BarChart3, Code2, PenTool, FileSearch, Languages, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const projects = [
   {
-    title: "Cher.et — Full-stack Platform",
+    title: "Cher.et",
     desc: "Co-owned a full-stack platform transforming manual workflows into automated digital systems supporting 30,000+ active users.",
     tags: ["Full-Stack", "APIs", "System Scale", "Product"],
     icon: FileSearch,
-    gradient: "from-primary/20 to-primary/5",
     featured: true,
     caseStudy: {
       problem: "Manual, fragmented workflows were severely bottlenecking operational scale and limiting system utility.",
@@ -19,11 +18,10 @@ const projects = [
     }
   },
   {
-    title: "CodeQuest — AI-Powered Learning",
+    title: "CodeQuest",
     desc: "Full-stack web platform enabling users to learn Python by actively debugging broken code rather than passively reading tutorials.",
     tags: ["React", "TypeScript", "FastAPI", "PostgreSQL"],
     icon: Code2,
-    gradient: "from-accent/20 to-accent/5",
     featured: true,
     caseStudy: {
       problem: "Classical coding tutorials proved passive and unengaging for beginners trying to master Python context loops and debugging.",
@@ -32,11 +30,10 @@ const projects = [
     }
   },
   {
-    title: "JobGen — AI Remote Job Finder",
+    title: "JobGen",
     desc: "Flutter mobile app improving job-matching by 30% through advanced AI integration and complex core modules including auth and chatbots.",
-    tags: ["Flutter", "BLoC", "Clean Architecture", "AI Integration"],
+    tags: ["Flutter", "BLoC", "Clean Architecture", "AI"],
     icon: MessageSquare,
-    gradient: "from-primary/20 to-accent/5",
     featured: true,
     caseStudy: {
       problem: "Current remote job apps suffered from severe performance bottlenecks, low offline availability, and highly inaccurate AI matching.",
@@ -45,11 +42,10 @@ const projects = [
     }
   },
   {
-    title: "Smart Personal Finance Platform",
-    desc: "ETB-first robust financial dashboard driving AI-based expense categorization with 80% real-time accuracy and native SMS ingestion.",
-    tags: ["Flutter", "Kotlin", "React", "Supabase Edge Functions"],
+    title: "Smart Finance",
+    desc: "ETB-first financial dashboard with AI expense categorization at 80% accuracy and native Kotlin SMS transaction ingestion.",
+    tags: ["Flutter", "Kotlin", "React", "Supabase"],
     icon: BarChart3,
-    gradient: "from-accent/20 to-primary/10",
     featured: true,
     caseStudy: {
       problem: "No localized personal finance apps seamlessly integrated bank, mobile-money, and cash transactions natively for Ethiopian (ETB) contexts.",
@@ -59,37 +55,33 @@ const projects = [
   },
   {
     title: "AI Code Reviewer",
-    desc: "Expert-level automated code analysis — detects security vulnerabilities, performance bottlenecks, and architecture issues with actionable fix suggestions.",
+    desc: "Expert-level automated code analysis with security, performance, and architecture insights.",
     tags: ["React", "Groq LLM", "Streaming", "TypeScript"],
     icon: Code2,
-    gradient: "from-primary/20 to-accent/10",
     featured: false,
     demo: "/code-review",
   },
   {
     title: "AI Content Studio",
-    desc: "Full-stack content generation platform. Create blog posts, emails, landing pages with tone & style controls powered by LLMs.",
+    desc: "Full-stack content generation with tone & style controls powered by LLMs.",
     tags: ["React", "Gemini AI", "Edge Functions", "Streaming"],
     icon: PenTool,
-    gradient: "from-accent/20 to-primary/10",
     featured: false,
     demo: "/content-studio",
   },
   {
-    title: "Sentiment Analysis Engine",
-    desc: "Real-time emotion detection and tone analysis. Breaks down text into sentiment scores, key phrases, and emotional patterns.",
+    title: "Sentiment Engine",
+    desc: "Real-time emotion detection and tone analysis with structured sentiment scoring.",
     tags: ["React", "NLP", "Gemini AI", "Streaming"],
     icon: BarChart3,
-    gradient: "from-primary/15 to-accent/15",
     featured: false,
     demo: "/sentiment",
   },
   {
-    title: "AI Translation Hub",
-    desc: "Context-aware multilingual translation with cultural nuance preservation. Supports 10+ languages with translator notes.",
+    title: "Translation Hub",
+    desc: "Context-aware multilingual translation with cultural nuance preservation.",
     tags: ["React", "Gemini AI", "i18n", "Streaming"],
     icon: Languages,
-    gradient: "from-accent/15 to-primary/15",
     featured: false,
     demo: "/translate",
   },
@@ -100,91 +92,81 @@ const ProjectsSection = () => {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="projects" className="py-32 relative">
-      <div className="absolute inset-0 grid-pattern opacity-20" />
-      <div className="max-w-7xl mx-auto px-6 relative z-10" ref={ref}>
+    <section id="projects" className="py-28 relative">
+      <div className="max-w-6xl mx-auto px-6 relative z-10" ref={ref}>
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.6 }}
+          className="mb-14"
         >
-          <span className="text-sm font-medium text-primary tracking-widest uppercase mb-4 block">Portfolio</span>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Featured <span className="text-gradient-primary">Projects</span>
+          <span className="text-xs font-medium text-primary tracking-widest uppercase mb-6 block">Portfolio</span>
+          <h2 className="text-4xl md:text-5xl font-normal mb-4 leading-[1.1]">
+            Featured <span className="text-gradient-primary italic">Projects</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Real-world applications showcasing full-stack development and AI integration expertise.
+          <p className="text-muted-foreground max-w-lg">
+            Real-world applications showcasing full-stack development and AI integration.
           </p>
         </motion.div>
 
-        {/* Featured projects - large cards */}
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
+        {/* Featured projects — clean list layout */}
+        <div className="space-y-px rounded-lg border border-border overflow-hidden mb-8">
           {projects.filter(p => p.featured).map((project, i) => (
             <Dialog key={project.title}>
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: i * 0.15 }}
-                className="group relative rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/40 transition-all duration-300 hover:shadow-glow flex flex-col"
+                initial={{ opacity: 0 }}
+                animate={inView ? { opacity: 1 } : {}}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="group bg-card hover:bg-secondary/40 transition-colors duration-200"
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                <div className="relative p-8 h-full flex flex-col">
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-                      <project.icon className="text-primary" size={26} />
+                <div className="flex items-center justify-between p-5 md:p-6 gap-4">
+                  <div className="flex items-center gap-5 min-w-0">
+                    <div className="w-10 h-10 rounded-lg bg-primary/[0.08] flex items-center justify-center shrink-0">
+                      <project.icon className="text-primary" size={18} />
                     </div>
-                    <div className="flex gap-2">
-                      <DialogTrigger asChild>
-                        <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-primary/30 text-primary bg-primary/5 hover:bg-primary/20 transition-all text-sm font-medium">
-                          <BookOpen size={16} /> Case Study
-                        </button>
-                      </DialogTrigger>
+                    <div className="min-w-0">
+                      <h3 className="text-base font-medium text-foreground mb-1">{project.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1 hidden sm:block">{project.desc}</p>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-foreground">{project.title}</h3>
-                  <p className="text-muted-foreground mb-6 leading-relaxed flex-1">{project.desc}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map(tag => (
-                      <span key={tag} className="text-xs px-3 py-1 rounded-full bg-secondary text-secondary-foreground border border-border">
-                        {tag}
-                      </span>
-                    ))}
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className="hidden md:flex gap-2">
+                      {project.tags.slice(0, 3).map(tag => (
+                        <span key={tag} className="text-xs px-2.5 py-1 rounded-md bg-secondary text-muted-foreground">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <DialogTrigger asChild>
+                      <button className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1">
+                        Details <ArrowUpRight size={12} />
+                      </button>
+                    </DialogTrigger>
                   </div>
                 </div>
               </motion.div>
 
-              <DialogContent className="sm:max-w-[650px] border-border bg-background shadow-2xl">
+              <DialogContent className="sm:max-w-[600px] border-border bg-card">
                 <DialogHeader>
-                  <div className="flex items-center gap-4 mb-4 pb-4 border-b border-border/50">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                      <project.icon className="text-primary" size={24} />
+                  <div className="flex items-center gap-3 mb-5 pb-5 border-b border-border">
+                    <div className="w-10 h-10 rounded-lg bg-primary/[0.08] flex items-center justify-center">
+                      <project.icon className="text-primary" size={18} />
                     </div>
-                    <DialogTitle className="text-2xl font-bold tracking-tight">{project.title}</DialogTitle>
+                    <DialogTitle className="text-xl font-normal">{project.title}</DialogTitle>
                   </div>
-                  
-                  <div className="space-y-6 pt-2 text-left">
-                    <div>
-                      <h4 className="flex items-center gap-2 text-red-400 font-semibold mb-2 uppercase text-xs tracking-wider">
-                        <span className="w-2 h-2 rounded-full bg-red-400"></span> The Problem
-                      </h4>
-                      <p className="text-foreground/80 leading-relaxed">{project.caseStudy?.problem}</p>
-                    </div>
 
+                  <div className="space-y-5 text-left">
                     <div>
-                      <h4 className="flex items-center gap-2 text-green-400 font-semibold mb-2 uppercase text-xs tracking-wider">
-                        <span className="w-2 h-2 rounded-full bg-green-400"></span> The Solution
-                      </h4>
-                      <p className="text-foreground/80 leading-relaxed">{project.caseStudy?.solution}</p>
+                      <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Problem</h4>
+                      <p className="text-sm text-foreground/85 leading-relaxed">{project.caseStudy?.problem}</p>
                     </div>
-
-                    <div className="p-4 rounded-xl bg-secondary/30 border border-border">
-                      <h4 className="text-primary font-semibold mb-2 flex items-center gap-2">
-                        <Code2 size={16} /> Architecture & Tech Stack
-                      </h4>
-                      <p className="text-sm text-foreground/80 leading-relaxed">
-                        {project.caseStudy?.tech}
-                      </p>
+                    <div>
+                      <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Solution</h4>
+                      <p className="text-sm text-foreground/85 leading-relaxed">{project.caseStudy?.solution}</p>
+                    </div>
+                    <div className="p-4 rounded-lg bg-background border border-border">
+                      <h4 className="text-xs font-medium text-primary mb-2">Architecture</h4>
+                      <p className="text-sm text-foreground/80 leading-relaxed">{project.caseStudy?.tech}</p>
                     </div>
                   </div>
                 </DialogHeader>
@@ -193,45 +175,30 @@ const ProjectsSection = () => {
           ))}
         </div>
 
-        {/* Expert projects with live demos */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {projects.filter(p => !p.featured).map((project, i) => (
-            <motion.div
-              key={project.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
-              className="group relative rounded-2xl border border-border bg-card overflow-hidden hover:border-primary/30 hover:shadow-glow transition-all duration-300"
-            >
-              <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-              <div className="relative p-7 flex flex-col h-full">
-                <div className="flex items-start justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-                    <project.icon className="text-primary" size={22} />
-                  </div>
-                  {"demo" in project && project.demo && (
-                    <Link
-                      to={project.demo}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 text-primary text-xs font-medium hover:bg-primary/20 transition-all shadow-[0_0_15px_rgba(var(--primary),0.1)]"
-                    >
-                      <ExternalLink size={12} />
-                      Live Demo
-                    </Link>
-                  )}
+        {/* Demo projects — smaller grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.4, delay: 0.3 }}
+        >
+          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-4">Live Demos</h3>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {projects.filter(p => !p.featured).map((project) => (
+              <Link
+                key={project.title}
+                to={(project as any).demo}
+                className="group p-4 rounded-lg border border-border bg-card hover:border-primary/20 hover:bg-secondary/30 transition-all duration-200"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <project.icon className="text-primary" size={16} />
+                  <ExternalLink size={12} className="text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-foreground">{project.title}</h3>
-                <p className="text-sm text-muted-foreground mb-5 leading-relaxed flex-1">{project.desc}</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map(tag => (
-                    <span key={tag} className="text-xs px-3 py-1 rounded-full bg-secondary text-secondary-foreground border border-border">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                <h4 className="text-sm font-medium text-foreground mb-1">{project.title}</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{project.desc}</p>
+              </Link>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -24,13 +24,13 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-background/80 backdrop-blur-xl border-b border-border" : ""
+        scrolled ? "bg-background/90 backdrop-blur-lg border-b border-border" : ""
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="#" className="text-xl font-bold font-['Space_Grotesk'] tracking-tight">
-          <span className="text-gradient-primary">Abel</span>
-          <span className="text-foreground">.dev</span>
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="#" className="text-lg font-medium tracking-tight">
+          <span className="text-foreground">Abel</span>
+          <span className="text-muted-foreground">.dev</span>
         </a>
 
         {/* Desktop */}
@@ -39,14 +39,14 @@ const Navbar = () => {
             <a
               key={item.href}
               href={item.href}
-              className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
             >
               {item.label}
             </a>
           ))}
           <a
             href="#contact"
-            className="bg-gradient-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
+            className="bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-medium hover:brightness-110 transition-all"
           >
             Hire Me
           </a>
@@ -57,7 +57,7 @@ const Navbar = () => {
           onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden text-foreground"
         >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
@@ -68,7 +68,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border"
+            className="md:hidden bg-background/95 backdrop-blur-lg border-b border-border"
           >
             <div className="px-6 py-4 flex flex-col gap-4">
               {navItems.map((item) => (
@@ -76,7 +76,7 @@ const Navbar = () => {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className="text-muted-foreground hover:text-primary transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors text-sm"
                 >
                   {item.label}
                 </a>
@@ -84,7 +84,7 @@ const Navbar = () => {
               <a
                 href="#contact"
                 onClick={() => setMobileOpen(false)}
-                className="bg-gradient-primary text-primary-foreground px-5 py-2 rounded-full text-sm font-medium text-center"
+                className="bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-medium text-center"
               >
                 Hire Me
               </a>

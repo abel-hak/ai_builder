@@ -22,94 +22,93 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-32 relative">
-      <div className="absolute inset-0 grid-pattern opacity-20" />
-      <div className="max-w-7xl mx-auto px-6 relative z-10" ref={ref}>
+    <section id="contact" className="py-28 relative">
+      <div className="max-w-6xl mx-auto px-6 relative z-10" ref={ref}>
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.6 }}
+          className="mb-14"
         >
-          <span className="text-sm font-medium text-primary tracking-widest uppercase mb-4 block">Contact</span>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Let's <span className="text-gradient-primary">Work Together</span>
+          <span className="text-xs font-medium text-primary tracking-widest uppercase mb-6 block">Contact</span>
+          <h2 className="text-4xl md:text-5xl font-normal mb-4 leading-[1.1]">
+            Let's <span className="text-gradient-primary italic">work together</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+          <p className="text-muted-foreground max-w-lg">
             Have a project in mind? Let's discuss how I can help bring your vision to life.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
-          {/* Contact info */}
+        <div className="grid lg:grid-cols-5 gap-12">
+          {/* Contact info — 2 cols */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="space-y-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="lg:col-span-2 space-y-6"
           >
             {[
               { icon: Mail, label: "Email", value: "erddunoabel47@gmail.com" },
-              { icon: MapPin, label: "Location", value: "Addis Ababa, Ethiopia (Remote Available)" },
+              { icon: MapPin, label: "Location", value: "Addis Ababa, Ethiopia" },
               { icon: Phone, label: "Phone", value: "+251995527848" },
             ].map(({ icon: Icon, label, value }) => (
-              <div key={label} className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Icon className="text-primary" size={20} />
+              <div key={label} className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-lg bg-primary/[0.08] flex items-center justify-center shrink-0">
+                  <Icon className="text-primary" size={16} />
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground mb-1">{label}</div>
-                  <div className="text-foreground font-medium">{value}</div>
+                  <div className="text-xs text-muted-foreground mb-0.5">{label}</div>
+                  <div className="text-sm text-foreground">{value}</div>
                 </div>
               </div>
             ))}
 
-            <div className="p-6 rounded-2xl border border-border bg-card">
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                💡 I'm currently <span className="text-primary font-medium">available for freelance work</span> on Upwork.
-                Whether you need a full-stack web app, AI integration, or technical consulting — let's talk!
+            <div className="pt-4 border-t border-border">
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Currently open to <span className="text-primary font-medium">full-time roles</span> and
+                freelance projects. Fast turnaround, clean code.
               </p>
             </div>
           </motion.div>
 
-          {/* Form */}
+          {/* Form — 3 cols */}
           <motion.form
             onSubmit={handleSubmit}
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="space-y-5 p-8 rounded-2xl border border-border bg-card"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="lg:col-span-3 space-y-4 p-6 rounded-lg border border-border bg-card"
           >
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-muted-foreground mb-2 block">Name</label>
-                <Input placeholder="John Doe" required className="bg-background" />
+                <label className="text-xs text-muted-foreground mb-1.5 block">Name</label>
+                <Input placeholder="Your name" required className="bg-background rounded-lg" />
               </div>
               <div>
-                <label className="text-sm text-muted-foreground mb-2 block">Email</label>
-                <Input type="email" placeholder="john@example.com" required className="bg-background" />
+                <label className="text-xs text-muted-foreground mb-1.5 block">Email</label>
+                <Input type="email" placeholder="you@company.com" required className="bg-background rounded-lg" />
               </div>
             </div>
             <div>
-              <label className="text-sm text-muted-foreground mb-2 block">Subject</label>
-              <Input placeholder="Project inquiry" required className="bg-background" />
+              <label className="text-xs text-muted-foreground mb-1.5 block">Subject</label>
+              <Input placeholder="Project inquiry" required className="bg-background rounded-lg" />
             </div>
             <div>
-              <label className="text-sm text-muted-foreground mb-2 block">Message</label>
+              <label className="text-xs text-muted-foreground mb-1.5 block">Message</label>
               <textarea
                 placeholder="Tell me about your project..."
                 required
-                rows={5}
-                className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm resize-none"
+                rows={4}
+                className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
               />
             </div>
             <Button
               type="submit"
               disabled={sending}
-              className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 rounded-full"
+              className="w-full bg-primary text-primary-foreground hover:brightness-110 rounded-lg"
             >
               {sending ? "Sending..." : "Send Message"}
-              <Send size={16} />
+              <Send size={14} className="ml-2" />
             </Button>
           </motion.form>
         </div>

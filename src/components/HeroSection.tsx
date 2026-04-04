@@ -1,112 +1,102 @@
 import { motion } from "framer-motion";
-import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowRight, Github, Linkedin, Mail, Download } from "lucide-react";
 import HeroBackground from "./HeroBackground";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-hero">
+    <section className="relative min-h-screen flex items-end pb-24 md:pb-32 overflow-hidden bg-gradient-hero">
       <HeroBackground />
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 grid-pattern opacity-40 mix-blend-overlay" />
-      
-      {/* Glow orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px]" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-[100px]" />
+      {/* Subtle grid — reduced opacity so it doesn't dominate */}
+      <div className="absolute inset-0 grid-pattern opacity-20" />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card/50 backdrop-blur-sm mb-8">
-            <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-            <span className="text-sm text-muted-foreground">Available for Freelance Work</span>
-          </div>
-        </motion.div>
+      {/* Single warm ambient glow — NOT two competing orbs */}
+      <div className="absolute top-0 left-1/3 w-[600px] h-[400px] bg-primary/[0.04] rounded-full blur-[150px]" />
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95] mb-6"
-        >
-          Hi, I'm <span className="text-gradient-primary">Abel Erduno Hakenso</span>
-          <br />
-          <span className="text-foreground/80 text-4xl md:text-5xl lg:text-6xl">Software Engineer</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10"
-        >
-          I build robust mobile & web applications and integrate intelligent AI solutions.
-          From scalable Flutter frontends to Python ML pipelines — I ship end-to-end.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="flex items-center justify-center gap-4 mb-16"
-        >
-          <a
-            href="#projects"
-            className="bg-gradient-primary text-primary-foreground px-8 py-3 rounded-full font-medium hover:opacity-90 transition-opacity"
+      <div className="relative z-10 max-w-6xl mx-auto px-6 w-full">
+        <div className="max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            View My Work
-          </a>
-          <a
-            href="#contact"
-            className="border border-border text-foreground px-8 py-3 rounded-full font-medium hover:bg-card transition-colors"
-          >
-            Get In Touch
-          </a>
-          <a
-            href="/resume.pdf"
-            target="_blank"
-            className="border border-primary/20 bg-primary/10 text-primary px-8 py-3 rounded-full font-medium hover:bg-primary/20 transition-colors"
-          >
-            Download CV
-          </a>
-        </motion.div>
+            <span className="text-sm font-medium text-muted-foreground tracking-wide mb-6 block">
+              Software Engineer · Addis Ababa
+            </span>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="flex items-center justify-center gap-6"
-        >
-          {[
-            { icon: Github, href: "https://github.com/", label: "GitHub" },
-            { icon: Linkedin, href: "https://linkedin.com/in/", label: "LinkedIn" },
-            { icon: Mail, href: "mailto:erddunoabel47@gmail.com", label: "Email" },
-          ].map(({ icon: Icon, href, label }) => (
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.08 }}
+            className="text-5xl md:text-7xl lg:text-[5.5rem] font-normal leading-[1.05] mb-8"
+          >
+            Abel Erduno{" "}
+            <span className="text-gradient-primary italic">Hakenso</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.16 }}
+            className="text-lg md:text-xl text-muted-foreground max-w-xl mb-10 leading-relaxed"
+          >
+            I build robust mobile & web applications and integrate intelligent AI solutions.
+            From Flutter to FastAPI — I ship end-to-end.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.24 }}
+            className="flex flex-wrap items-center gap-4 mb-16"
+          >
             <a
-              key={label}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-full border border-border text-muted-foreground hover:text-primary hover:border-primary/50 transition-all"
-              aria-label={label}
+              href="#projects"
+              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg text-sm font-medium hover:brightness-110 transition-all"
             >
-              <Icon size={20} />
+              View My Work
+              <ArrowRight size={16} />
             </a>
-          ))}
-        </motion.div>
+            <a
+              href="#contact"
+              className="inline-flex items-center gap-2 border border-border text-foreground px-6 py-3 rounded-lg text-sm font-medium hover:bg-card transition-colors"
+            >
+              Get In Touch
+            </a>
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Download size={14} />
+              Resume
+            </a>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-        >
-          <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">
-            <ArrowDown size={24} className="animate-bounce" />
-          </a>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="flex items-center gap-5"
+          >
+            {[
+              { icon: Github, href: "https://github.com/", label: "GitHub" },
+              { icon: Linkedin, href: "https://linkedin.com/in/", label: "LinkedIn" },
+              { icon: Mail, href: "mailto:erddunoabel47@gmail.com", label: "Email" },
+            ].map(({ icon: Icon, href, label }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors duration-200"
+                aria-label={label}
+              >
+                <Icon size={18} />
+              </a>
+            ))}
+          </motion.div>
+        </div>
       </div>
     </section>
   );
