@@ -1,11 +1,15 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Github, Linkedin, Mail, Download } from "lucide-react";
-import HeroBackground from "./HeroBackground";
+import { lazy, Suspense } from "react";
+
+const HeroBackground = lazy(() => import("./HeroBackground"));
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-end pb-24 md:pb-32 overflow-hidden bg-gradient-hero">
-      <HeroBackground />
+      <Suspense fallback={null}>
+        <HeroBackground />
+      </Suspense>
       {/* Subtle grid — reduced opacity so it doesn't dominate */}
       <div className="absolute inset-0 grid-pattern opacity-20" />
 

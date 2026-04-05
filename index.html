@@ -3,23 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Application Name -->
+    <meta name="color-scheme" content="light dark" />
+
     <title>Abel Erduno Hakenso - Software Engineer</title>
     <meta name="description" content="Portfolio of Abel Erduno Hakenso | Software Engineer specializing in scalable web, mobile, and AI solutions." />
     <meta name="author" content="Abel Erduno Hakenso" />
 
-    <!-- Open Graph Metadata -->
-    <meta property="og:title" content="Abel Erduno - Software Engineer" />
-    <meta property="og:description" content="Portfolio of Abel Erduno Hakenso | Full-stack & Mobile Developer." />
+    <!-- Preconnect to font CDN to eliminate DNS/TLS latency -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Preload critical fonts (display swap so text renders immediately) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Geist:wght@300;400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Geist:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Geist:wght@300;400;500;600;700&display=swap" />
+    </noscript>
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Abel Erduno Hakenso - Software Engineer" />
+    <meta property="og:description" content="Portfolio showcasing full-stack, mobile, and AI engineering." />
     <meta property="og:type" content="website" />
-    
-    <!-- Twitter Metadata -->
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#0a0b0d" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fcfcfd" media="(prefers-color-scheme: light)" />
   </head>
 
   <body>
     <script>
-      // Prevent flash of wrong theme
+      // Prevent flash of wrong theme (runs before React)
       (function() {
         var t = localStorage.getItem('theme');
         if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
