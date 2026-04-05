@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { ArrowLeft, BarChart3, Loader2, Sparkles, Copy, Check, History } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ArrowLeft, BarChart3, Loader2, Sparkles, Copy, Check, History, Smile, Frown, Meh, Zap, Heart, AlertTriangle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { streamAI } from "@/lib/ai-stream";
 import { toast } from "sonner";
@@ -22,16 +22,98 @@ const samples = [
   },
 ];
 
+// Parse structured sentiment data from AI response
+const parseSentimentData = (text: string) => {
+  const emotions: { name: string; score: number; icon: any; color: string }[] = [];
+  const emotionMap: Record<string, { icon: any; color: string }> = {
+    joy: { icon: Smile, color: "#10b981" },
+    happiness: { icon: Smile, color: "#10b981" },
+    positive: { icon: Smile, color: "#10b981" },
+    anger: { icon: Zap, color: "#ef4444" },
+    frustration: { icon: AlertTriangle, color: "#f97316" },
+    sadness: { icon: Frown, color: "#6366f1" },
+    fear: { icon: AlertTriangle, color: "#8b5cf6" },
+    anxiety: { icon: AlertTriangle, color: "#8b5cf6" },
+    love: { icon: Heart, color: "#ec4899" },
+    surprise: { icon: Zap, color: "#eab308" },
+    neutral: { icon: Meh, color: "#6b7280" },
+    trust: { icon: Heart, color: "#14b8a6" },
+    disgust: { icon: Frown, color: "#78716c" },
+    anticipation: { icon: Zap, color: "#f59e0b" },
+  };
+
+  // Try to extract emotion scores like "Joy: 8/10" or "Joy: 80%"
+  const patterns = [
+    /(?:^|\n)\s*[-•*]?\s*\**([a-z]+)\**\s*[:：]\s*(\d+)\s*(?:\/\s*10|%)/gim,
+    /(?:^|\n)\s*[-•*]?\s*\**([a-z]+)\**\s*[:：]\s*\**(\d+)\**/gim,
+  ];
+
+  for (const pattern of patterns) {
+    let match;
+    while ((match = pattern.exec(text)) !== null) {
+      const name = match[1].toLowerCase().trim();
+      let score = parseInt(match[2], 10);
+      if (score > 10) score = Math.round(score / 10); // Convert percentage to /10
+      if (score >= 0 && score <= 10 && emotionMap[name]) {
+        emotions.push({ name: name.charAt(0).toUpperCase() + name.slice(1), score, ...emotionMap[name] });
+      }
+    }
+    if (emotions.length > 0) break;
+  }
+
+  // Extract overall sentiment
+  let overall: "positive" | "negative" | "mixed" | "neutral" = "neutral";
+  if (/overall.*positive/i.test(text) || /sentiment.*positive/i.test(text)) overall = "positive";
+  else if (/overall.*negative/i.test(text) || /sentiment.*negative/i.test(text)) overall = "negative";
+  else if (/overall.*mixed/i.test(text) || /sentiment.*mixed/i.test(text)) overall = "mixed";
+
+  // Extract confidence/score
+  let confidence: number | null = null;
+  const confMatch = text.match(/(?:confidence|overall.*score|sentiment.*score)\s*[:：]\s*(\d+)/i);
+  if (confMatch) confidence = parseInt(confMatch[1], 10);
+
+  return { emotions: emotions.slice(0, 6), overall, confidence };
+};
+
+const overallConfig = {
+  positive: { label: "Positive", color: "#10b981", bg: "bg-emerald-500/10", text: "text-emerald-400", icon: Smile },
+  negative: { label: "Negative", color: "#ef4444", bg: "bg-red-500/10", text: "text-red-400", icon: Frown },
+  mixed: { label: "Mixed", color: "#f59e0b", bg: "bg-yellow-500/10", text: "text-yellow-400", icon: Meh },
+  neutral: { label: "Neutral", color: "#6b7280", bg: "bg-gray-500/10", text: "text-gray-400", icon: Meh },
+};
+
+// Horizontal bar for emotion scores
+const EmotionBar = ({ name, score, color, icon: Icon }: { name: string; score: number; color: string; icon: any }) => (
+  <div className="flex items-center gap-3">
+    <div className="w-20 flex items-center gap-1.5 shrink-0">
+      <Icon size={12} style={{ color }} />
+      <span className="text-xs text-foreground/80">{name}</span>
+    </div>
+    <div className="flex-1 h-2 bg-border rounded-full overflow-hidden">
+      <div
+        className="h-full rounded-full transition-all duration-1000 ease-out"
+        style={{ width: `${score * 10}%`, backgroundColor: color }}
+      />
+    </div>
+    <span className="text-xs text-muted-foreground w-6 text-right">{score}</span>
+  </div>
+);
+
 const SentimentDemo = () => {
   const [text, setText] = useState(samples[0].text);
   const [analysis, setAnalysis] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
+  const outputRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => { fetchHistory(); }, []);
 
   useEffect(() => {
-    fetchHistory();
-  }, []);
+    if (loading && outputRef.current) {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+    }
+  }, [analysis, loading]);
 
   const fetchHistory = async () => {
     const { data } = await supabase
@@ -48,13 +130,26 @@ const SentimentDemo = () => {
     setLoading(true);
     let result = "";
 
+    const prompt = `Analyze the sentiment and emotions in this text. 
+
+IMPORTANT: Include a structured emotion breakdown with scores out of 10 for each detected emotion using this exact format:
+- **Joy**: 7/10
+- **Frustration**: 4/10
+(include 3-6 emotions)
+
+Also include:
+- Overall sentiment (Positive, Negative, Mixed, or Neutral)
+- Confidence: X/10
+- Key phrases analysis
+- Tone description
+
+Text to analyze:
+"${text}"`;
+
     await streamAI({
       mode: "sentiment",
-      messages: [{ role: "user", content: `Analyze the sentiment of this text:\n\n"${text}"` }],
-      onDelta: (chunk) => {
-        result += chunk;
-        setAnalysis(result);
-      },
+      messages: [{ role: "user", content: prompt }],
+      onDelta: (chunk) => { result += chunk; setAnalysis(result); },
       onDone: async () => {
         setLoading(false);
         const { error } = await supabase.from("generations").insert({
@@ -62,144 +157,201 @@ const SentimentDemo = () => {
           input_text: text,
           output_text: result,
         });
-        if (!error) {
-          fetchHistory();
-        } else {
-          console.error("Failed to save history:", error);
-        }
+        if (!error) fetchHistory();
       },
-      onError: (err) => toast.error(err),
+      onError: (err) => { setLoading(false); toast.error(err); },
     });
   };
 
   const copyAnalysis = () => {
     navigator.clipboard.writeText(analysis);
     setCopied(true);
+    toast.success("Copied to clipboard");
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const sentimentData = analysis && !loading ? parseSentimentData(analysis) : null;
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <header className="border-b border-border bg-card/50 backdrop-blur-xl sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-4">
-          <Link to="/#projects" className="p-2 rounded-lg border border-border hover:border-primary/50 hover:text-primary transition-all">
-            <ArrowLeft size={18} />
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <BarChart3 className="text-primary" size={20} />
-            </div>
-            <div>
-              <h1 className="font-bold text-lg">Sentiment Analysis Engine</h1>
-              <p className="text-xs text-muted-foreground">Emotion · Tone · Intent Detection</p>
+      {/* Header */}
+      <header className="border-b border-border bg-card/50 backdrop-blur-lg sticky top-0 z-50">
+        <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link to="/#projects" className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft size={16} />
+            </Link>
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-primary/[0.08] flex items-center justify-center">
+                <BarChart3 className="text-primary" size={16} />
+              </div>
+              <div>
+                <h1 className="text-sm font-medium">Sentiment Engine</h1>
+                <p className="text-[11px] text-muted-foreground">Emotion · Tone · Intent Detection</p>
+              </div>
             </div>
           </div>
+          <button
+            onClick={handleAnalyze}
+            disabled={loading || !text.trim()}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:brightness-110 transition-all disabled:opacity-50"
+          >
+            {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+            {loading ? "Analyzing..." : "Analyze"}
+          </button>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-8 flex-1 w-full">
-        {/* Sample presets */}
-        <div className="flex gap-2 mb-6 flex-wrap">
-          {samples.map((s) => (
-            <button
-              key={s.label}
-              onClick={() => setText(s.text)}
-              className={`px-4 py-2 rounded-xl text-sm border transition-all ${
-                text === s.text
-                  ? "border-primary bg-primary/10 text-primary shadow-[0_0_15px_rgba(var(--primary),0.1)]"
-                  : "border-border text-muted-foreground hover:border-primary/30"
-              }`}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
+      <main className="flex-1 flex overflow-hidden">
+        {/* Sidebar — History */}
+        <aside className="w-56 border-r border-border bg-card/30 flex-col hidden lg:flex">
+          <div className="px-4 py-3 border-b border-border flex items-center gap-2">
+            <History size={13} className="text-primary" />
+            <span className="text-xs font-medium">History</span>
+          </div>
+          <div className="flex-1 overflow-auto p-2 space-y-1">
+            {history.length === 0 ? (
+              <div className="text-[11px] text-muted-foreground text-center p-4">No analyses yet</div>
+            ) : (
+              history.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => { setText(item.input_text); setAnalysis(item.output_text); }}
+                  className="w-full text-left px-3 py-2.5 rounded-md hover:bg-secondary transition-colors group"
+                >
+                  <div className="text-[11px] text-foreground/80 line-clamp-2 leading-relaxed group-hover:text-foreground">
+                    {item.input_text.slice(0, 80)}
+                  </div>
+                  <div className="text-[10px] text-muted-foreground mt-1">
+                    {new Date(item.created_at).toLocaleDateString()}
+                  </div>
+                </button>
+              ))
+            )}
+          </div>
+        </aside>
 
-        <div className="grid lg:grid-cols-4 gap-6 h-[calc(100vh-14rem)]">
-          {/* History Sidebar */}
-          <div className="col-span-1 flex flex-col rounded-2xl border border-border bg-card overflow-hidden h-full">
-            <div className="px-5 py-3 border-b border-border flex items-center gap-2">
-              <History size={16} className="text-primary" />
-              <span className="text-sm font-medium text-foreground">History</span>
+        <div className="flex-1 flex flex-col lg:flex-row min-w-0">
+          {/* Input Panel */}
+          <div className="lg:w-[400px] shrink-0 border-r border-border flex flex-col">
+            <div className="px-4 py-2 border-b border-border bg-card/30">
+              <span className="text-xs text-muted-foreground">Input Text</span>
             </div>
-            <div className="flex-1 p-3 overflow-auto flex flex-col gap-2">
-              {history.length === 0 ? (
-                <div className="text-xs text-muted-foreground text-center p-4">No past analyses yet.</div>
-              ) : (
-                history.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setText(item.input_text);
-                      setAnalysis(item.output_text);
-                    }}
-                    className="text-left p-3 rounded-lg border border-border bg-background hover:border-primary/50 hover:bg-secondary/20 transition-all text-xs group"
-                  >
-                    <div className="font-medium text-foreground mb-1 line-clamp-2 leading-relaxed group-hover:text-primary transition-colors">
-                      {item.input_text}
-                    </div>
-                    <div className="text-muted-foreground opacity-60">
-                      {new Date(item.created_at).toLocaleDateString()}
-                    </div>
-                  </button>
-                ))
-              )}
+            {/* Sample presets */}
+            <div className="flex gap-1.5 px-4 py-3 border-b border-border">
+              {samples.map((s) => (
+                <button
+                  key={s.label}
+                  onClick={() => setText(s.text)}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-medium border transition-all ${
+                    text === s.text
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border text-muted-foreground hover:border-primary/20"
+                  }`}
+                >
+                  {s.label}
+                </button>
+              ))}
             </div>
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Paste text to analyze..."
+              className="flex-1 p-4 bg-transparent text-sm resize-none focus:outline-none text-foreground placeholder:text-muted-foreground leading-[1.8]"
+              spellCheck={false}
+            />
           </div>
 
-          <div className="col-span-3 grid lg:grid-cols-2 gap-6 h-full">
-            {/* Input */}
-            <div className="flex flex-col rounded-2xl border border-border bg-card overflow-hidden h-full">
-              <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Input Text</span>
+          {/* Results Panel */}
+          <div className="flex-1 flex flex-col min-w-0">
+            <div className="px-4 py-2 border-b border-border flex items-center justify-between bg-card/30">
+              <span className="text-xs text-muted-foreground">
+                {loading ? "Analyzing..." : analysis ? "Analysis Complete" : "Results"}
+              </span>
+              {analysis && (
                 <button
-                  onClick={handleAnalyze}
-                  disabled={loading || !text.trim()}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+                  onClick={copyAnalysis}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
                 >
-                  {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
-                  {loading ? "Analyzing..." : "Analyze"}
+                  {copied ? <Check size={12} className="text-primary" /> : <Copy size={12} />}
+                  {copied ? "Copied" : "Copy"}
                 </button>
-              </div>
-              <textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder="Paste text to analyze..."
-                className="flex-1 p-6 bg-transparent text-sm resize-none focus:outline-none text-foreground placeholder:text-muted-foreground leading-relaxed"
-                spellCheck={false}
-              />
+              )}
             </div>
 
-            {/* Output */}
-            <div className="flex flex-col rounded-2xl border border-border bg-card overflow-hidden h-full">
-              <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Sentiment Analysis</span>
-                {analysis && (
-                  <button onClick={copyAnalysis} className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground">
-                    {copied ? <Check size={14} className="text-primary" /> : <Copy size={14} />}
-                  </button>
-                )}
-              </div>
-              <div className="flex-1 p-6 overflow-auto">
-                {analysis ? (
+            <div ref={outputRef} className="flex-1 overflow-auto">
+              {analysis ? (
+                <div className="p-5 space-y-5">
+                  {/* Visual Dashboard — only shows after streaming completes */}
+                  {sentimentData && (
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {/* Overall Sentiment Card */}
+                      {sentimentData.overall && (
+                        <div className={`p-4 rounded-lg border border-border ${overallConfig[sentimentData.overall].bg}`}>
+                          <div className="text-xs text-muted-foreground mb-2">Overall Sentiment</div>
+                          <div className="flex items-center gap-2">
+                            {(() => {
+                              const OIcon = overallConfig[sentimentData.overall].icon;
+                              return <OIcon size={20} className={overallConfig[sentimentData.overall].text} />;
+                            })()}
+                            <span className={`text-lg font-medium ${overallConfig[sentimentData.overall].text}`}>
+                              {overallConfig[sentimentData.overall].label}
+                            </span>
+                          </div>
+                          {sentimentData.confidence !== null && (
+                            <div className="text-xs text-muted-foreground mt-2">
+                              Confidence: {sentimentData.confidence}/10
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Emotion Bars */}
+                      {sentimentData.emotions.length > 0 && (
+                        <div className="p-4 rounded-lg border border-border bg-card">
+                          <div className="text-xs text-muted-foreground mb-3">Emotion Breakdown</div>
+                          <div className="space-y-2.5">
+                            {sentimentData.emotions.map((e) => (
+                              <EmotionBar key={e.name} {...e} />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Full Markdown Analysis */}
                   <div className="prose prose-sm prose-invert max-w-none text-sm leading-relaxed text-foreground/90">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        h1: ({ children }) => <h2 className="text-base font-medium text-foreground mt-6 mb-2 first:mt-0">{children}</h2>,
+                        h2: ({ children }) => <h3 className="text-sm font-medium text-foreground mt-5 mb-2">{children}</h3>,
+                        strong: ({ children }) => <strong className="text-foreground font-medium">{children}</strong>,
+                        li: ({ children }) => <li className="text-foreground/80 leading-relaxed">{children}</li>,
+                        p: ({ children }) => <p className="text-foreground/85 leading-[1.7] mb-3">{children}</p>,
+                      }}
+                    >
                       {analysis}
                     </ReactMarkdown>
                   </div>
-                ) : (
-                  <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-                    {loading ? (
-                      <div className="flex items-center gap-3">
-                        <Loader2 className="animate-spin text-primary" size={20} />
-                        <span>Running sentiment analysis...</span>
-                      </div>
-                    ) : (
-                      "Click 'Analyze' to detect sentiment and emotions"
-                    )}
-                  </div>
-                )}
-              </div>
+                </div>
+              ) : (
+                <div className="h-full flex items-center justify-center">
+                  {loading ? (
+                    <div className="flex flex-col items-center gap-3 text-muted-foreground">
+                      <Loader2 className="animate-spin" size={20} />
+                      <span className="text-xs">Running sentiment analysis...</span>
+                    </div>
+                  ) : (
+                    <div className="text-center px-8">
+                      <BarChart3 size={32} className="text-muted-foreground/30 mx-auto mb-3" />
+                      <p className="text-sm text-muted-foreground mb-1">Paste text and click "Analyze"</p>
+                      <p className="text-xs text-muted-foreground/60">Detect emotions, tone, and intent patterns</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
