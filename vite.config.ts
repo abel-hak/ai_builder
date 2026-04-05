@@ -25,6 +25,7 @@ export default defineConfig(() => ({
           "vendor-motion": ["framer-motion"],
           "vendor-three": ["three", "@react-three/fiber"],
           "vendor-markdown": ["react-markdown", "remark-gfm"],
+          "vendor-monaco": ["@monaco-editor/react"],
         },
       },
     },
