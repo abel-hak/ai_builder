@@ -26,6 +26,7 @@ export default defineConfig(() => ({
           "vendor-three": ["three", "@react-three/fiber"],
           "vendor-markdown": ["react-markdown", "remark-gfm"],
           "vendor-monaco": ["@monaco-editor/react"],
+          "vendor-recharts": ["recharts"],
         },
       },
     },
