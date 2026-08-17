@@ -26,6 +26,8 @@ A high-performance developer portfolio with live AI-powered demo tools, built wi
 
 ## 🚀 Getting Started
 
+Requires **Node.js 20** and **npm**. Do not use bun or yarn — this repo ships a single `package-lock.json`.
+
 ```sh
 # 1. Clone the repo
 git clone https://github.com/abel-hak/ai_builder.git
@@ -43,6 +45,11 @@ npm run dev
 ```
 
 The app runs at `http://localhost:8080`
+
+```sh
+# Run the unit tests (no credentials or network required)
+npm test
+```
 
 ## ⚙️ Environment Variables
 
