@@ -4,9 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import Home from "./pages/Home";
-
-const Work = lazy(() => import("./pages/Work"));
+const Home = lazy(() => import("./pages/Home"));
 const CodeReviewDemo = lazy(() => import("./pages/CodeReviewDemo"));
 const ContentStudioDemo = lazy(() => import("./pages/ContentStudioDemo"));
 const SentimentDemo = lazy(() => import("./pages/SentimentDemo"));
@@ -32,7 +30,7 @@ const App = () => (
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/work" element={<Work />} />
+            {/* /work (builder portfolio) kept in src/pages/Work.tsx but unpublished for now */}
             <Route path="/code-review" element={<CodeReviewDemo />} />
             <Route path="/content-studio" element={<ContentStudioDemo />} />
             <Route path="/sentiment" element={<SentimentDemo />} />

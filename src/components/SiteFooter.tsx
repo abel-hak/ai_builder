@@ -6,8 +6,8 @@ type FooterMode = "product" | "work";
 const productLinks = [
   { label: "Tools", href: "/#tools" },
   { label: "How it works", href: "/#how" },
-  { label: "Work", href: "/work" },
-  { label: "Contact", href: "/work#contact" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "mailto:erddunoabel47@gmail.com" },
 ];
 
 const workLinks = [
@@ -111,12 +111,7 @@ const SiteFooter = ({ mode = "product" }: { mode?: FooterMode }) => {
           </p>
           <p className="text-xs text-muted-foreground">
             {mode === "product" ? (
-              <>
-                Built with React & Supabase ·{" "}
-                <Link to="/work" className="hover:text-foreground transition-colors">
-                  View builder profile
-                </Link>
-              </>
+              "Built with React, TypeScript & Supabase"
             ) : (
               <>
                 Prefer the tools?{" "}

@@ -10,8 +10,9 @@ A live product sample of four AI tools (code review, content studio, sentiment, 
 - **Markdown rendering** — AI responses rendered with `react-markdown` and syntax highlighting
 - **History tracking** — Every AI generation is saved to Supabase and browsable from a sidebar
 - **"Hire Me" AI Chatbot** — Floating widget that answers questions about the builder
-- **`/work` profile** — Optional about, projects, skills, and contact for clients who want background
 - **Anti-slop design** — Instrument Serif + Geist pairing, warm amber on warm neutrals, paper grain, editorial layout
+
+> Note: a builder profile page exists at `src/pages/Work.tsx` but is unpublished from the router for now.
 
 ## 🛠️ Tech Stack
 

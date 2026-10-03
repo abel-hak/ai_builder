@@ -115,12 +115,12 @@ const Home = () => {
                 Open the tools
                 <ArrowRight size={16} />
               </a>
-              <Link
-                to="/work"
+              <a
+                href="mailto:erddunoabel47@gmail.com"
                 className="inline-flex items-center gap-2 border border-border text-foreground px-6 py-3 rounded-md text-sm font-medium hover:bg-card transition-colors"
               >
-                Meet the builder
-              </Link>
+                Contact Abel
+              </a>
             </motion.div>
           </div>
         </div>
@@ -198,7 +198,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Builder CTA — hire path without making this a portfolio */}
+      {/* Builder CTA — hire path without exposing the portfolio page */}
       <section className="py-24 border-t border-border">
         <div className="max-w-6xl mx-auto px-6">
           <div className="max-w-2xl">
@@ -208,21 +208,12 @@ const Home = () => {
             </h2>
             <p className="text-body text-muted-foreground mb-8">
               Forge is a product sample: React, TypeScript, Supabase, and streaming LLMs in one
-              shippable app. If you want the broader case studies and background, they’re on the
-              work page.
+              shippable app. Reach out if you want something like this built for your team.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link to="/work" className="btn-primary">
-                View work & contact
-                <ArrowRight size={16} />
-              </Link>
-              <a
-                href="mailto:erddunoabel47@gmail.com"
-                className="inline-flex items-center gap-2 border border-border text-foreground px-6 py-3 rounded-md text-sm font-medium hover:bg-card transition-colors"
-              >
-                Email Abel
-              </a>
-            </div>
+            <a href="mailto:erddunoabel47@gmail.com" className="btn-primary">
+              Email Abel
+              <ArrowRight size={16} />
+            </a>
           </div>
         </div>
       </section>

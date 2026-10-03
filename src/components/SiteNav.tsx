@@ -9,7 +9,6 @@ type NavMode = "product" | "work";
 const productLinks = [
   { label: "Tools", href: "/#tools" },
   { label: "How it works", href: "/#how" },
-  { label: "Work", href: "/work" },
   { label: "Blog", href: "/blog" },
 ];
 

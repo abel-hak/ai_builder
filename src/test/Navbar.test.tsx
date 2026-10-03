@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import SiteNav from "@/components/SiteNav";
 
 describe("SiteNav", () => {
-  it("product mode links to tools and work", () => {
+  it("product mode links to tools without exposing the portfolio", () => {
     render(
       <MemoryRouter>
         <SiteNav mode="product" />
@@ -11,7 +11,7 @@ describe("SiteNav", () => {
     );
     expect(screen.getByRole("link", { name: /forge\.ai home/i })).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: /^tools$/i })).toHaveAttribute("href", "/#tools");
-    expect(screen.getByRole("link", { name: /^work$/i })).toHaveAttribute("href", "/work");
+    expect(screen.queryByRole("link", { name: /^work$/i })).not.toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: /try tools/i })[0]).toHaveAttribute("href", "/#tools");
   });
 
