@@ -337,7 +337,7 @@ Text to analyze:
       <header className="border-b border-border bg-card/50 backdrop-blur-lg sticky top-0 z-50">
         <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link to="/#projects" className="p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/#tools" className="p-2 rounded-md text-muted-foreground hover:text-foreground transition-colors" aria-label="Back to tools">
               <ArrowLeft size={16} />
             </Link>
             <div className="flex items-center gap-2.5">

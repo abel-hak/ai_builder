@@ -26,6 +26,6 @@ describe("Blog", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole("link", { name: /back to portfolio/i })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: /back to forge/i })).toHaveAttribute("href", "/");
   });
 });

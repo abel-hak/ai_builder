@@ -4,9 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import Index from "./pages/Index";
+import Home from "./pages/Home";
 
-// Lazy-load all non-critical routes for code splitting
+const Work = lazy(() => import("./pages/Work"));
 const CodeReviewDemo = lazy(() => import("./pages/CodeReviewDemo"));
 const ContentStudioDemo = lazy(() => import("./pages/ContentStudioDemo"));
 const SentimentDemo = lazy(() => import("./pages/SentimentDemo"));
@@ -31,7 +31,8 @@ const App = () => (
       <BrowserRouter>
         <Suspense fallback={<PageLoader />}>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/work" element={<Work />} />
             <Route path="/code-review" element={<CodeReviewDemo />} />
             <Route path="/content-studio" element={<ContentStudioDemo />} />
             <Route path="/sentiment" element={<SentimentDemo />} />

@@ -1,17 +1,25 @@
 import { render, screen } from "@testing-library/react";
-import Footer from "@/components/Footer";
+import { MemoryRouter } from "react-router-dom";
+import SiteFooter from "@/components/SiteFooter";
 
-describe("Footer", () => {
-  it("renders section navigation links", () => {
-    render(<Footer />);
-    expect(screen.getByRole("link", { name: /^about$/i })).toHaveAttribute("href", "#about");
-    expect(screen.getByRole("link", { name: /^projects$/i })).toHaveAttribute("href", "#projects");
-    expect(screen.getByRole("link", { name: /^skills$/i })).toHaveAttribute("href", "#skills");
-    expect(screen.getByRole("link", { name: /^contact$/i })).toHaveAttribute("href", "#contact");
+describe("SiteFooter", () => {
+  it("product mode exposes tools and work navigation", () => {
+    render(
+      <MemoryRouter>
+        <SiteFooter mode="product" />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("link", { name: /^tools$/i })).toHaveAttribute("href", "/#tools");
+    expect(screen.getByRole("link", { name: /^work$/i })).toHaveAttribute("href", "/work");
+    expect(screen.getByRole("link", { name: /view builder profile/i })).toHaveAttribute("href", "/work");
   });
 
   it("exposes labeled social links", () => {
-    render(<Footer />);
+    render(
+      <MemoryRouter>
+        <SiteFooter mode="product" />
+      </MemoryRouter>,
+    );
     expect(screen.getByRole("link", { name: /github/i })).toHaveAttribute(
       "href",
       "https://github.com/abel-hak",

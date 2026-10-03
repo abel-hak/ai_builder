@@ -1,25 +1,38 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import Navbar from "@/components/Navbar";
+import { MemoryRouter } from "react-router-dom";
+import SiteNav from "@/components/SiteNav";
 
-describe("Navbar", () => {
-  it("renders the primary section links", () => {
-    render(<Navbar />);
+describe("SiteNav", () => {
+  it("product mode links to tools and work", () => {
+    render(
+      <MemoryRouter>
+        <SiteNav mode="product" />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("link", { name: /forge\.ai home/i })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: /^tools$/i })).toHaveAttribute("href", "/#tools");
+    expect(screen.getByRole("link", { name: /^work$/i })).toHaveAttribute("href", "/work");
+    expect(screen.getAllByRole("link", { name: /try tools/i })[0]).toHaveAttribute("href", "/#tools");
+  });
+
+  it("work mode keeps hire and section anchors", () => {
+    render(
+      <MemoryRouter>
+        <SiteNav mode="work" />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("link", { name: /abel\.dev home/i })).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: /^about$/i })).toHaveAttribute("href", "#about");
     expect(screen.getByRole("link", { name: /^projects$/i })).toHaveAttribute("href", "#projects");
-    expect(screen.getByRole("link", { name: /^skills$/i })).toHaveAttribute("href", "#skills");
-    expect(screen.getByRole("link", { name: /^blog$/i })).toHaveAttribute("href", "/blog");
-    expect(screen.getByRole("link", { name: /^contact$/i })).toHaveAttribute("href", "#contact");
+    expect(screen.getAllByRole("link", { name: /hire me/i })[0]).toHaveAttribute("href", "#contact");
   });
 
-  it("renders a Hire Me call to action", () => {
-    render(<Navbar />);
-    const hireLinks = screen.getAllByRole("link", { name: /hire me/i });
-    expect(hireLinks.length).toBeGreaterThan(0);
-    expect(hireLinks[0]).toHaveAttribute("href", "#contact");
-  });
-
-  it("reveals additional nav links when the mobile menu opens", () => {
-    render(<Navbar />);
+  it("reveals additional links when the mobile menu opens", () => {
+    render(
+      <MemoryRouter>
+        <SiteNav mode="work" />
+      </MemoryRouter>,
+    );
     const aboutBefore = screen.getAllByRole("link", { name: /^about$/i });
     fireEvent.click(screen.getByRole("button", { name: /open menu/i }));
     const aboutAfter = screen.getAllByRole("link", { name: /^about$/i });

@@ -1,16 +1,16 @@
-# Abel Erduno Hakenso — Developer Portfolio
+# Forge.ai — Streaming AI Tool Suite
 
-A high-performance developer portfolio with live AI-powered demo tools, built with React, TypeScript, Vite, Tailwind CSS, and Supabase.
+A live product sample of four AI tools (code review, content studio, sentiment, translation), built with React, TypeScript, Vite, Tailwind CSS, and Supabase. The builder profile and case studies live at `/work`.
 
 ## ✨ Features
 
-- **Single-page portfolio** — Hero, About, Projects (with Case Study modals), Skills, and Contact sections
-- **Light / Dark mode** — System-aware theme toggle with `localStorage` persistence
-- **Live AI Demo tools** — Code Reviewer, Content Studio, Sentiment Analyzer, Translation Hub
+- **Product home** — Forge.ai leads with the four tools, not a personal resume
+- **4 Live AI tools** — Code Reviewer, Content Studio, Sentiment Analyzer, Translation Hub
 - **Streaming AI responses** — Powered by Groq via Supabase Edge Functions
 - **Markdown rendering** — AI responses rendered with `react-markdown` and syntax highlighting
 - **History tracking** — Every AI generation is saved to Supabase and browsable from a sidebar
-- **"Hire Me" AI Chatbot** — Floating widget trained on my resume that answers recruiter questions
+- **"Hire Me" AI Chatbot** — Floating widget that answers questions about the builder
+- **`/work` profile** — Optional about, projects, skills, and contact for clients who want background
 - **Anti-slop design** — Instrument Serif + Geist pairing, warm amber on warm neutrals, paper grain, editorial layout
 
 ## 🛠️ Tech Stack
