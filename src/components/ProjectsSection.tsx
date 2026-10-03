@@ -183,10 +183,10 @@ const ProjectsSection = () => {
         >
           <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-4">Live Demos</h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {projects.filter(p => !p.featured).map((project) => (
+            {projects.filter((p): p is Extract<typeof p, { demo: string }> => "demo" in p).map((project) => (
               <Link
                 key={project.title}
-                to={(project as any).demo}
+                to={project.demo}
                 className="group p-4 rounded-lg border border-border bg-card hover:border-primary/20 hover:bg-secondary/30 transition-all duration-200"
               >
                 <div className="flex items-center justify-between mb-3">
