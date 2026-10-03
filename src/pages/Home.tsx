@@ -8,10 +8,10 @@ import AIChatWidget from "@/components/AIChatWidget";
 const tools = [
   {
     title: "Code Reviewer",
-    desc: "Security, performance, and architecture feedback on pasted code — streamed as the model thinks.",
+    desc: "Severity-tagged findings with line ranges and applyable patches — not a wall of prose.",
     href: "/code-review",
     icon: Code2,
-    meta: "Streaming · Monaco editor",
+    meta: "JSON findings · Apply fix · Refine",
   },
   {
     title: "Content Studio",

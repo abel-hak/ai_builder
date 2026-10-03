@@ -28,6 +28,35 @@ Keep your answers concise, usually 1-3 sentences. Always enthusiastically recomm
 
 Be specific with line references. Suggest concrete fixes with code snippets. Be thorough but concise.`,
 
+  "code-review-json": `You are a senior software engineer performing a rigorous code review.
+Return ONLY a single JSON object matching this exact shape, with no prose, no markdown fences:
+
+{
+  "summary": string,            // 2-4 sentences: what the code does and its overall state. Plain text, no markdown.
+  "score": number,              // 1-10 overall quality; 10 is production-ready.
+  "issues": [
+    {
+      "line": number,           // 1-based line where the issue starts (must exist in the input)
+      "endLine": number,        // optional, inclusive end line
+      "severity": "critical" | "warning" | "info",
+      "category": "security" | "performance" | "architecture" | "best-practice",
+      "title": string,          // <= 8 words
+      "message": string,        // 1-3 sentences: why it matters and what to do
+      "fix": {                  // optional; include only when a direct line replacement is safe
+        "startLine": number,    // 1-based, inclusive
+        "endLine": number,      // 1-based, inclusive
+        "replacement": string   // exact replacement text for those lines, preserving indentation
+      } | null
+    }
+  ]
+}
+
+Rules:
+- Line numbers refer to the code exactly as given (count from 1, blank lines included).
+- "critical" = security holes, data loss, crashes. "warning" = bugs, perf traps, bad error handling. "info" = style, naming, clarity.
+- Prefer 3-10 high-value issues over an exhaustive list. If the code is clean, return an empty issues array with a high score.
+- Fixes must be minimal and must only replace the lines they target. Never include a fix you are not confident compiles.`,
+
   "content-studio": `You are an expert content strategist and copywriter. Generate high-quality content based on the user's request. Adapt your tone, style, and format precisely to the brief. Include:
 - Engaging hooks and headlines
 - Well-structured body content
@@ -53,15 +82,31 @@ Be precise and data-driven in your analysis.`,
 Provide the translation followed by brief translator's notes if any cultural adaptations were made.`,
 };
 
+// Keep in sync with MODELS in src/lib/models.ts. Anything not listed falls
+// back to the default so a stale client can never make us call a retired ID.
+const ALLOWED_MODELS = new Set([
+  "openai/gpt-oss-20b",
+  "openai/gpt-oss-120b",
+  "qwen/qwen3.8-27b",
+]);
+
+const resolveModel = (requested: unknown): string => {
+  if (typeof requested === "string" && ALLOWED_MODELS.has(requested)) return requested;
+  // Groq retires model IDs every month or two, so keep the default overridable
+  // with `supabase secrets set GROQ_MODEL=...` instead of redeploying.
+  return Deno.env.get("GROQ_MODEL") ?? "openai/gpt-oss-20b";
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { mode, messages } = await req.json();
+    const { mode, messages, model, format } = await req.json();
     const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
     if (!GROQ_API_KEY) throw new Error("GROQ_API_KEY is not configured");
 
     const systemPrompt = systemPrompts[mode] || systemPrompts["content-studio"];
+    const wantsJson = format === "json";
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -70,14 +115,17 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        // Groq retires model IDs every month or two, so keep this overridable
-        // with `supabase secrets set GROQ_MODEL=...` instead of redeploying.
-        model: Deno.env.get("GROQ_MODEL") ?? "openai/gpt-oss-20b",
+        model: resolveModel(model),
         messages: [
           { role: "system", content: systemPrompt },
           ...messages,
         ],
         stream: true,
+        // Groq appends `x_groq.usage` to the final chunk when streaming; the
+        // client reads it to show tokens/sec and cost.
+        ...(wantsJson
+          ? { response_format: { type: "json_object" }, temperature: 0.2 }
+          : {}),
       }),
     });
 
