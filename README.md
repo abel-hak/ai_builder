@@ -7,7 +7,7 @@ A high-performance developer portfolio with live AI-powered demo tools, built wi
 - **Single-page portfolio** — Hero, About, Projects (with Case Study modals), Skills, and Contact sections
 - **Light / Dark mode** — System-aware theme toggle with `localStorage` persistence
 - **4 Live AI Demo tools** — Code Reviewer, Content Studio, Sentiment Analyzer, Translation Hub
-- **Streaming AI responses** — Powered by Groq (LLaMA 3.1) via Supabase Edge Functions
+- **Streaming AI responses** — Powered by Groq via Supabase Edge Functions
 - **Markdown rendering** — AI responses rendered with `react-markdown` and syntax highlighting
 - **History tracking** — Every AI generation is saved to Supabase and browsable from a sidebar
 - **"Hire Me" AI Chatbot** — Floating widget trained on my resume that answers recruiter questions
@@ -19,7 +19,7 @@ A high-performance developer portfolio with live AI-powered demo tools, built wi
 | Layer | Technologies |
 |-------|-------------|
 | **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Framer Motion |
-| **AI Engine** | Groq API (`llama-3.1-8b-instant`) via Supabase Edge Functions |
+| **AI Engine** | Groq API (`openai/gpt-oss-20b`) via Supabase Edge Functions |
 | **Backend** | Supabase (PostgreSQL + Edge Functions) |
 | **3D Graphics** | Three.js, @react-three/fiber v8 |
 | **Routing** | React Router DOM v6 |
@@ -64,6 +64,14 @@ The Supabase Edge Function (`ai-demo`) requires one secret set in the Supabase D
 
 ```
 GROQ_API_KEY=your-groq-api-key
+```
+
+Groq retires model IDs every month or two. The function defaults to
+`openai/gpt-oss-20b`; if that is ever decommissioned, switch models without a
+redeploy by setting an optional second secret:
+
+```
+GROQ_MODEL=some-newer-model-id
 ```
 
 ## 🗄️ Database Schema

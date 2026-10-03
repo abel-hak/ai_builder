@@ -70,7 +70,9 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
+        // Groq retires model IDs every month or two, so keep this overridable
+        // with `supabase secrets set GROQ_MODEL=...` instead of redeploying.
+        model: Deno.env.get("GROQ_MODEL") ?? "openai/gpt-oss-20b",
         messages: [
           { role: "system", content: systemPrompt },
           ...messages,
