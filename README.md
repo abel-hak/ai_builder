@@ -68,12 +68,16 @@ GROQ_API_KEY=your-groq-api-key
 
 ## 🗄️ Database Schema
 
-Two tables are required in your Supabase project (with RLS policies allowing public insert/select):
+Run [`supabase/schema.sql`](supabase/schema.sql) once in the Supabase SQL editor. It creates:
 
 | Table | Columns | Purpose |
 |-------|---------|---------|
 | `generations` | `id`, `created_at`, `type`, `input_text`, `output_text` | Stores AI demo history |
 | `chat_logs` | `id`, `created_at`, `user_message`, `ai_response` | Stores "Hire Me" chatbot conversations |
+| `contact_messages` | `id`, `created_at`, `name`, `email`, `subject`, `message` | Stores contact form submissions |
+
+`contact_messages` and `chat_logs` are insert-only for the `anon` role, so visitors
+cannot read each other's submissions. Read them from the Supabase dashboard.
 
 ## 📁 Project Structure
 
@@ -113,10 +117,28 @@ npm run build
 
 ## 🚢 Deployment
 
-The frontend can be deployed to **Vercel** or **Netlify** by connecting the GitHub repo. The Supabase Edge Function is deployed separately:
+### 1. Backend (Supabase)
 
 ```sh
-npx supabase functions deploy ai-demo
+npx supabase login
+npx supabase link --project-ref <your-project-ref>
+npx supabase secrets set GROQ_API_KEY=<your-groq-key>
+npx supabase functions deploy ai-demo --no-verify-jwt
+```
+
+The project ref in `supabase/config.toml` must match the one in `VITE_SUPABASE_URL`.
+
+### 2. Frontend (Vercel)
+
+Import the GitHub repo in Vercel. The build is detected automatically
+(`npm run build` → `dist`), and `vercel.json` rewrites all routes to
+`index.html` so deep links like `/code-review` survive a refresh.
+
+Set these environment variables in the Vercel project settings:
+
+```
+VITE_SUPABASE_URL
+VITE_SUPABASE_PUBLISHABLE_KEY
 ```
 
 ## 👤 Author
