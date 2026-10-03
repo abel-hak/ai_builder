@@ -34,12 +34,20 @@ interface SentimentResult {
 }
 
 const emotionColors: Record<string, string> = {
-  joy: "#10b981", happiness: "#10b981", positive: "#10b981",
-  anger: "#ef4444", frustration: "#f97316",
-  sadness: "#6366f1", fear: "#8b5cf6", anxiety: "#8b5cf6",
-  love: "#ec4899", trust: "#14b8a6",
-  surprise: "#eab308", anticipation: "#f59e0b",
-  disgust: "#78716c", neutral: "#6b7280",
+  joy: "hsl(var(--status-positive))",
+  happiness: "hsl(var(--status-positive))",
+  positive: "hsl(var(--status-positive))",
+  anger: "hsl(var(--status-negative))",
+  frustration: "hsl(var(--status-negative))",
+  sadness: "hsl(var(--status-neutral))",
+  fear: "hsl(var(--status-neutral))",
+  anxiety: "hsl(var(--status-caution))",
+  love: "hsl(var(--primary))",
+  trust: "hsl(var(--status-positive))",
+  surprise: "hsl(var(--status-caution))",
+  anticipation: "hsl(var(--primary))",
+  disgust: "hsl(var(--status-neutral))",
+  neutral: "hsl(var(--status-neutral))",
 };
 
 const parseSentimentData = (text: string): SentimentResult => {
@@ -105,16 +113,23 @@ const parseSentimentData = (text: string): SentimentResult => {
 
 // ── Visual Components ──
 const overallConfig = {
-  positive: { label: "Positive", color: "#10b981", bg: "bg-emerald-500/10", text: "text-emerald-400", icon: Smile },
-  negative: { label: "Negative", color: "#ef4444", bg: "bg-red-500/10", text: "text-red-400", icon: Frown },
-  mixed: { label: "Mixed", color: "#f59e0b", bg: "bg-yellow-500/10", text: "text-yellow-400", icon: Meh },
-  neutral: { label: "Neutral", color: "#6b7280", bg: "bg-gray-500/10", text: "text-gray-400", icon: Meh },
+  positive: { label: "Positive", color: "hsl(var(--status-positive))", bg: "bg-status-positive", text: "text-status-positive", icon: Smile },
+  negative: { label: "Negative", color: "hsl(var(--status-negative))", bg: "bg-status-negative", text: "text-status-negative", icon: Frown },
+  mixed: { label: "Mixed", color: "hsl(var(--status-caution))", bg: "bg-status-caution", text: "text-status-caution", icon: Meh },
+  neutral: { label: "Neutral", color: "hsl(var(--status-neutral))", bg: "bg-status-neutral", text: "text-status-neutral", icon: Meh },
 };
 
 const SentimentGauge = ({ score }: { score: number }) => {
   const circumference = 2 * Math.PI * 40;
   const offset = circumference - (score / 10) * circumference;
-  const color = score <= 3 ? "#ef4444" : score <= 5 ? "#f97316" : score <= 7 ? "#eab308" : "#10b981";
+  const color =
+    score <= 3
+      ? "hsl(var(--status-negative))"
+      : score <= 5
+        ? "hsl(var(--status-caution))"
+        : score <= 7
+          ? "hsl(var(--status-caution))"
+          : "hsl(var(--status-positive))";
 
   return (
     <div className="flex flex-col items-center">
@@ -126,7 +141,7 @@ const SentimentGauge = ({ score }: { score: number }) => {
             stroke={color} strokeWidth="5"
             strokeDasharray={circumference} strokeDashoffset={offset}
             strokeLinecap="round"
-            className="transition-all duration-1000 ease-out"
+            className="transition-[stroke-dashoffset] duration-1000 ease-out"
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -144,7 +159,7 @@ const EmotionBar = ({ name, score, color }: { name: string; score: number; color
     <span className="text-[11px] text-foreground/70 w-20 shrink-0 text-right">{name}</span>
     <div className="flex-1 h-1.5 bg-border rounded-full overflow-hidden">
       <div
-        className="h-full rounded-full transition-all duration-1000 ease-out"
+        className="h-full rounded-full transition-[width] duration-1000 ease-out"
         style={{ width: `${score * 10}%`, backgroundColor: color }}
       />
     </div>
@@ -305,8 +320,8 @@ Text to analyze:
           <span
             key={i}
             className={
-              p.type === "positive" ? "bg-emerald-500/15 text-emerald-300 px-0.5 rounded" :
-              p.type === "negative" ? "bg-red-500/15 text-red-300 px-0.5 rounded" : ""
+              p.type === "positive" ? "bg-status-positive text-status-positive px-0.5 rounded" :
+              p.type === "negative" ? "bg-status-negative text-status-negative px-0.5 rounded" : ""
             }
           >
             {p.text}
@@ -326,11 +341,11 @@ Text to analyze:
               <ArrowLeft size={16} />
             </Link>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-primary/[0.08] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-md border border-border flex items-center justify-center">
                 <BarChart3 className="text-primary" size={16} />
               </div>
               <div>
-                <h1 className="text-sm font-medium">Sentiment Engine</h1>
+                <h1 className="text-sm font-medium font-sans">Sentiment Engine</h1>
                 <p className="text-[11px] text-muted-foreground">Emotion · Tone · Intent Detection</p>
               </div>
             </div>
@@ -339,7 +354,7 @@ Text to analyze:
             {sentimentData && (
               <button
                 onClick={() => exportReport(text, sentimentData, analysis)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-md border border-border text-xs text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
               >
                 <Download size={12} />
                 Export
@@ -348,7 +363,7 @@ Text to analyze:
             <button
               onClick={handleAnalyze}
               disabled={loading || !text.trim()}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:brightness-110 transition-all disabled:opacity-50"
+              className="btn-primary !px-4 !py-2 disabled:opacity-50"
             >
               {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
               {loading ? "Analyzing..." : "Analyze"}
@@ -388,7 +403,7 @@ Text to analyze:
             <div className="flex gap-1.5 px-4 py-2.5 border-b border-border">
               {samples.map((s) => (
                 <button key={s.label} onClick={() => setText(s.text)}
-                  className={`px-2.5 py-1 rounded-md text-[11px] font-medium border transition-all ${text === s.text ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/20"}`}>
+                  className={`px-2.5 py-1 rounded-sm text-[11px] font-medium border transition-colors ${text === s.text ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/20"}`}>
                   {s.label}
                 </button>
               ))}
@@ -407,7 +422,7 @@ Text to analyze:
               <span className="text-xs text-muted-foreground">{loading ? "Analyzing..." : analysis ? "Analysis Complete" : "Results"}</span>
               {analysis && (
                 <button onClick={() => { navigator.clipboard.writeText(analysis); setCopied(true); toast.success("Copied"); setTimeout(() => setCopied(false), 2000); }}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-all">
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
                   {copied ? <Check size={12} className="text-primary" /> : <Copy size={12} />}
                   {copied ? "Copied" : "Copy"}
                 </button>
@@ -445,7 +460,7 @@ Text to analyze:
                             <div className="text-[11px] text-muted-foreground mb-2">Key Phrases</div>
                             <div className="flex flex-wrap gap-1.5">
                               {sentimentData.highlights.slice(0, 6).map((h, i) => (
-                                <span key={i} className={`text-[10px] px-2 py-0.5 rounded-full ${h.sentiment === "positive" ? "bg-emerald-500/15 text-emerald-400" : "bg-red-500/15 text-red-400"}`}>
+                                <span key={i} className={`text-[10px] px-2 py-0.5 rounded-sm ${h.sentiment === "positive" ? "bg-status-positive text-status-positive" : "bg-status-negative text-status-negative"}`}>
                                   {h.text.slice(0, 30)}
                                 </span>
                               ))}
@@ -497,10 +512,10 @@ Text to analyze:
                           <div className="text-[11px] text-muted-foreground mb-2">Highlighted Source Text</div>
                           <div className="flex gap-3 mb-2">
                             <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                              <span className="w-2 h-2 rounded-full bg-emerald-500/50" /> Positive
+                              <span className="w-2 h-2 rounded-full bg-[hsl(var(--status-positive))]" /> Positive
                             </span>
                             <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                              <span className="w-2 h-2 rounded-full bg-red-500/50" /> Negative
+                              <span className="w-2 h-2 rounded-full bg-[hsl(var(--status-negative))]" /> Negative
                             </span>
                           </div>
                           {getHighlightedText()}
@@ -510,7 +525,7 @@ Text to analyze:
                   )}
 
                   {/* Full AI analysis */}
-                  <div className="prose prose-sm prose-invert max-w-none text-sm leading-relaxed text-foreground/90">
+                  <div className={`prose prose-sm prose-invert max-w-none text-sm leading-relaxed text-foreground/90 ${loading ? "streaming" : ""}`}>
                     <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
                       h2: ({ children }) => <h3 className="text-sm font-medium text-foreground mt-5 mb-2">{children}</h3>,
                       strong: ({ children }) => <strong className="text-foreground font-medium">{children}</strong>,

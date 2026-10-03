@@ -14,25 +14,22 @@ const socialLinks = [
 ];
 
 const Footer = () => (
-  <footer className="border-t border-border bg-card/50">
+  <footer className="border-t border-border bg-background">
     <div className="max-w-6xl mx-auto px-6">
-      {/* Top row */}
       <div className="py-12 grid sm:grid-cols-3 gap-10">
-        {/* Brand */}
         <div>
           <a href="#" className="text-lg font-medium tracking-tight mb-3 block">
             <span className="text-foreground">Abel</span>
             <span className="text-muted-foreground">.dev</span>
           </a>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-            Software Engineer based in Addis Ababa, Ethiopia.
-            Building robust mobile & web applications with AI integration.
+            Software Engineer based in Addis Ababa, Ethiopia. Building robust mobile & web
+            applications with AI integration.
           </p>
         </div>
 
-        {/* Navigation */}
         <div>
-          <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-4">Navigation</h4>
+          <h4 className="label text-muted-foreground mb-4">Navigation</h4>
           <ul className="space-y-2.5">
             {footerLinks.map((link) => (
               <li key={link.href}>
@@ -47,9 +44,8 @@ const Footer = () => (
           </ul>
         </div>
 
-        {/* Connect */}
         <div>
-          <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-4">Connect</h4>
+          <h4 className="label text-muted-foreground mb-4">Connect</h4>
           <ul className="space-y-2.5">
             {socialLinks.map(({ icon: Icon, href, label }) => (
               <li key={label}>
@@ -69,14 +65,11 @@ const Footer = () => (
         </div>
       </div>
 
-      {/* Bottom row */}
       <div className="border-t border-border py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="text-xs text-muted-foreground">
           © {new Date().getFullYear()} Abel Erduno Hakenso. All rights reserved.
         </p>
-        <p className="text-xs text-muted-foreground">
-          Built with React, TypeScript & Supabase
-        </p>
+        <p className="text-xs text-muted-foreground">Built with React, TypeScript & Supabase</p>
       </div>
     </div>
   </footer>

@@ -107,11 +107,11 @@ Format: Use markdown formatting. Make it publication-ready and compelling.`;
               <ArrowLeft size={16} />
             </Link>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-primary/[0.08] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-md border border-border flex items-center justify-center">
                 <PenTool className="text-primary" size={16} />
               </div>
               <div>
-                <h1 className="text-sm font-medium">AI Content Studio</h1>
+                <h1 className="text-sm font-medium font-sans">AI Content Studio</h1>
                 <p className="text-[11px] text-muted-foreground">Blog · LinkedIn · Email · Landing Page</p>
               </div>
             </div>
@@ -119,7 +119,7 @@ Format: Use markdown formatting. Make it publication-ready and compelling.`;
           <button
             onClick={handleGenerate}
             disabled={loading || !topic.trim()}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:brightness-110 transition-all disabled:opacity-50"
+            className="btn-primary !px-4 !py-2 disabled:opacity-50"
           >
             {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
             {loading ? "Writing..." : "Generate"}
@@ -169,7 +169,7 @@ Format: Use markdown formatting. Make it publication-ready and compelling.`;
                     <button
                       key={t.id}
                       onClick={() => setSelectedTemplate(i)}
-                      className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-xs font-medium border transition-all ${
+                      className={`flex items-center gap-2 px-3 py-2.5 rounded-md text-xs font-medium border transition-colors ${
                         selectedTemplate === i
                           ? "border-primary bg-primary/10 text-primary"
                           : "border-border text-muted-foreground hover:border-primary/20 hover:text-foreground"
@@ -236,7 +236,7 @@ Format: Use markdown formatting. Make it publication-ready and compelling.`;
                     <button
                       key={wc.value}
                       onClick={() => setTargetWords(wc.value)}
-                      className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
+                      className={`px-3 py-2 rounded-md text-xs font-medium border transition-colors ${
                         targetWords === wc.value
                           ? "border-primary bg-primary/10 text-primary"
                           : "border-border text-muted-foreground hover:border-primary/20"
@@ -252,7 +252,7 @@ Format: Use markdown formatting. Make it publication-ready and compelling.`;
               <button
                 onClick={handleGenerate}
                 disabled={loading || !topic.trim()}
-                className="w-full lg:hidden flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:brightness-110 transition-all disabled:opacity-50"
+                className="btn-primary w-full lg:hidden"
               >
                 {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
                 {loading ? "Writing..." : "Generate Content"}
@@ -281,7 +281,7 @@ Format: Use markdown formatting. Make it publication-ready and compelling.`;
               {output && (
                 <button
                   onClick={copyOutput}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                 >
                   {copied ? <Check size={12} className="text-primary" /> : <Copy size={12} />}
                   {copied ? "Copied" : "Copy"}
@@ -293,7 +293,7 @@ Format: Use markdown formatting. Make it publication-ready and compelling.`;
             <div ref={outputRef} className="flex-1 overflow-auto">
               {output ? (
                 <div className="p-6 max-w-2xl">
-                  <div className="prose prose-sm prose-invert max-w-none text-sm leading-[1.8] text-foreground/90">
+                  <div className={`prose prose-sm prose-invert max-w-none text-sm leading-[1.8] text-foreground/90 ${loading ? "streaming" : ""}`}>
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{

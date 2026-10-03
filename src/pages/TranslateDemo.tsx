@@ -119,11 +119,11 @@ Text to translate:
               <ArrowLeft size={16} />
             </Link>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-primary/[0.08] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-md border border-border flex items-center justify-center">
                 <Languages className="text-primary" size={16} />
               </div>
               <div>
-                <h1 className="text-sm font-medium">Translation Hub</h1>
+                <h1 className="text-sm font-medium font-sans">Translation Hub</h1>
                 <p className="text-[11px] text-muted-foreground">Context-aware multilingual translation</p>
               </div>
             </div>
@@ -131,7 +131,7 @@ Text to translate:
           <button
             onClick={handleTranslate}
             disabled={loading || !sourceText.trim()}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:brightness-110 transition-all disabled:opacity-50"
+            className="btn-primary !px-4 !py-2 disabled:opacity-50"
           >
             {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
             {loading ? "Translating..." : "Translate"}
@@ -196,7 +196,7 @@ Text to translate:
             <button
               onClick={swapLanguages}
               disabled={sourceLang === "auto" || !translation}
-              className="p-1.5 rounded-md text-muted-foreground hover:text-primary hover:bg-secondary transition-all disabled:opacity-30"
+              className="p-1.5 rounded-md text-muted-foreground hover:text-primary hover:bg-secondary transition-colors disabled:opacity-30"
             >
               <ArrowRightLeft size={14} />
             </button>
@@ -249,7 +249,7 @@ Text to translate:
                 {translation && (
                   <button
                     onClick={() => copyText(translation, "target")}
-                    className="flex items-center gap-1 px-2 py-0.5 rounded text-[11px] text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
+                    className="flex items-center gap-1 px-2 py-0.5 rounded text-[11px] text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                   >
                     {copied === "target" ? <Check size={11} className="text-primary" /> : <Copy size={11} />}
                     {copied === "target" ? "Copied" : "Copy"}

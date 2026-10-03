@@ -21,9 +21,7 @@ describe("Navbar", () => {
   it("reveals additional nav links when the mobile menu opens", () => {
     render(<Navbar />);
     const aboutBefore = screen.getAllByRole("link", { name: /^about$/i });
-    const mobileToggle = screen.getAllByRole("button").find((button) => !button.getAttribute("aria-label"));
-    expect(mobileToggle).toBeDefined();
-    fireEvent.click(mobileToggle!);
+    fireEvent.click(screen.getByRole("button", { name: /open menu/i }));
     const aboutAfter = screen.getAllByRole("link", { name: /^about$/i });
     expect(aboutAfter.length).toBeGreaterThan(aboutBefore.length);
   });

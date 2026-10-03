@@ -23,7 +23,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={() => setDark(!dark)}
-      className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
+      className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-200"
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {dark ? <Sun size={16} /> : <Moon size={16} />}

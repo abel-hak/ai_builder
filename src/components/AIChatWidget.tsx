@@ -78,12 +78,12 @@ const AIChatWidget = () => {
                 <div>
                   <h3 className="font-semibold text-sm text-foreground">Abel's AI Assistant</h3>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-[hsl(var(--status-positive))] animate-pulse" />
                     <span className="text-xs text-muted-foreground font-medium">Online & Ready</span>
                   </div>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-all">
+              <button onClick={() => setIsOpen(false)} className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-full transition-colors" aria-label="Close chat">
                 <X size={18} />
               </button>
             </div>
@@ -116,14 +116,14 @@ const AIChatWidget = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about Abel's tech stack..."
-                className="flex-1 bg-background text-sm rounded-full px-4 py-2.5 border border-border focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all placeholder:text-muted-foreground"
+                className="flex-1 bg-background text-sm rounded-full px-4 py-2.5 border border-border focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-[border-color,box-shadow] placeholder:text-muted-foreground"
                 disabled={isLoading}
                 spellCheck={false}
               />
               <button 
                 type="submit" 
                 disabled={!input.trim() || isLoading}
-                className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50 hover:opacity-90 hover:scale-105 active:scale-95 transition-all flex-shrink-0 shadow-md"
+                className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50 hover:brightness-105 active:scale-95 transition-[transform,filter] flex-shrink-0 shadow-md"
               >
                 <Send size={16} className="ml-0.5" />
               </button>
@@ -135,7 +135,7 @@ const AIChatWidget = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "w-14 h-14 rounded-full shadow-glow flex items-center justify-center text-primary-foreground hover:scale-105 active:scale-95 transition-all duration-300 relative",
+          "w-14 h-14 rounded-full shadow-glow flex items-center justify-center text-primary-foreground hover:scale-105 active:scale-95 transition-[transform,background-color,box-shadow] duration-300 relative",
           isOpen ? "bg-secondary text-foreground shadow-none" : "bg-gradient-primary"
         )}
         aria-label="Toggle AI chat"

@@ -250,9 +250,9 @@ const Blog = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <span className="text-xs font-medium text-primary tracking-widest uppercase mb-6 block">Blog</span>
-          <h1 className="text-4xl md:text-5xl font-normal mb-4 leading-[1.1]">
-            Technical <span className="text-gradient-primary italic">Writing</span>
+          <span className="label text-primary mb-5 block">Blog</span>
+          <h1 className="font-display text-display mb-4">
+            Notes from the build log
           </h1>
           <p className="text-muted-foreground mb-14 max-w-lg">
             Lessons from building real products — architecture decisions, debugging war stories, and engineering trade-offs.

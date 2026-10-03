@@ -53,10 +53,10 @@ const extractScore = (text: string): number | null => {
 };
 
 const getScoreColor = (score: number) => {
-  if (score <= 3) return { bg: "bg-red-500/15", text: "text-red-400", ring: "ring-red-500/30", fill: "#ef4444" };
-  if (score <= 5) return { bg: "bg-orange-500/15", text: "text-orange-400", ring: "ring-orange-500/30", fill: "#f97316" };
-  if (score <= 7) return { bg: "bg-yellow-500/15", text: "text-yellow-400", ring: "ring-yellow-500/30", fill: "#eab308" };
-  return { bg: "bg-emerald-500/15", text: "text-emerald-400", ring: "ring-emerald-500/30", fill: "#10b981" };
+  if (score <= 3) return { text: "text-status-negative", fill: "hsl(var(--status-negative))" };
+  if (score <= 5) return { text: "text-status-caution", fill: "hsl(var(--status-caution))" };
+  if (score <= 7) return { text: "text-status-caution", fill: "hsl(var(--status-caution))" };
+  return { text: "text-status-positive", fill: "hsl(var(--status-positive))" };
 };
 
 const ScoreGauge = ({ score }: { score: number }) => {
@@ -76,7 +76,7 @@ const ScoreGauge = ({ score }: { score: number }) => {
             strokeDasharray={circumference}
             strokeDashoffset={offset}
             strokeLinecap="round"
-            className="transition-all duration-1000 ease-out"
+            className="transition-[stroke-dashoffset] duration-1000 ease-out"
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
@@ -179,11 +179,11 @@ const CodeReviewDemo = () => {
               <ArrowLeft size={16} />
             </Link>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-primary/[0.08] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-md border border-border flex items-center justify-center">
                 <Code2 className="text-primary" size={16} />
               </div>
               <div>
-                <h1 className="text-sm font-medium">AI Code Reviewer</h1>
+                <h1 className="text-sm font-medium font-sans">AI Code Reviewer</h1>
                 <p className="text-[11px] text-muted-foreground">Security · Performance · Architecture</p>
               </div>
             </div>
@@ -191,7 +191,7 @@ const CodeReviewDemo = () => {
           <button
             onClick={handleReview}
             disabled={loading || !code.trim()}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:brightness-110 transition-all disabled:opacity-50"
+            className="btn-primary !px-4 !py-2 disabled:opacity-50"
           >
             {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
             {loading ? "Analyzing..." : "Review Code"}
@@ -325,7 +325,7 @@ const CodeReviewDemo = () => {
                   {score !== null && !loading && <ScoreGauge score={score} />}
 
                   {/* Markdown Review */}
-                  <div className="prose prose-sm prose-invert max-w-none text-sm leading-relaxed text-foreground/90">
+                  <div className={`prose prose-sm prose-invert max-w-none text-sm leading-relaxed text-foreground/90 ${loading ? "streaming" : ""}`}>
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{

@@ -1,14 +1,14 @@
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useRef, useState } from "react";
-import { Send, Mail, MapPin, Phone } from "lucide-react";
+import { Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 
 const ContactSection = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const reduceMotion = useReducedMotion();
   const { toast } = useToast();
   const [sending, setSending] = useState(false);
 
@@ -40,96 +40,109 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-28 relative">
+    <section id="contact" className="pt-28 pb-32 relative bg-card/40 border-t border-border">
       <div className="max-w-6xl mx-auto px-6 relative z-10" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-14"
-        >
-          <span className="text-xs font-medium text-primary tracking-widest uppercase mb-6 block">Contact</span>
-          <h2 className="text-4xl md:text-5xl font-normal mb-4 leading-[1.1]">
-            Let's <span className="text-gradient-primary italic">work together</span>
-          </h2>
-          <p className="text-muted-foreground max-w-lg">
-            Have a project in mind? Let's discuss how I can help bring your vision to life.
-          </p>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-5 gap-12">
-          {/* Contact info — 2 cols */}
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-2 space-y-6"
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-5"
           >
-            {[
-              { icon: Mail, label: "Email", value: "erddunoabel47@gmail.com" },
-              { icon: MapPin, label: "Location", value: "Addis Ababa, Ethiopia" },
-              { icon: Phone, label: "Phone", value: "+251995527848" },
-            ].map(({ icon: Icon, label, value }) => (
-              <div key={label} className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-primary/[0.08] flex items-center justify-center shrink-0">
-                  <Icon className="text-primary" size={16} />
-                </div>
-                <div>
-                  <div className="text-xs text-muted-foreground mb-0.5">{label}</div>
-                  <div className="text-sm text-foreground">{value}</div>
-                </div>
-              </div>
-            ))}
+            <span className="label text-primary mb-5 block">Contact</span>
+            <h2 className="font-display text-display mb-6">
+              Tell me what you're building.
+            </h2>
+            <p className="text-body text-muted-foreground mb-10 max-w-md">
+              Open to full-time roles and freelance projects. Prefer email if the form is down.
+            </p>
 
-            <div className="pt-4 border-t border-border">
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Currently open to <span className="text-primary font-medium">full-time roles</span> and
-                freelance projects. Fast turnaround, clean code.
-              </p>
-            </div>
+            <dl className="space-y-5">
+              <div>
+                <dt className="label text-muted-foreground mb-1">Email</dt>
+                <dd>
+                  <a
+                    href="mailto:erddunoabel47@gmail.com"
+                    className="text-sm text-foreground hover:text-primary transition-colors"
+                  >
+                    erddunoabel47@gmail.com
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt className="label text-muted-foreground mb-1">Location</dt>
+                <dd className="text-sm text-foreground">Addis Ababa, Ethiopia</dd>
+              </div>
+              <div>
+                <dt className="label text-muted-foreground mb-1">Phone</dt>
+                <dd className="text-sm text-foreground">+251 995 527 848</dd>
+              </div>
+            </dl>
           </motion.div>
 
-          {/* Form — 3 cols */}
           <motion.form
             onSubmit={handleSubmit}
-            initial={{ opacity: 0, y: 20 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="lg:col-span-3 space-y-4 p-6 rounded-lg border border-border bg-card"
+            transition={{ duration: 0.5, delay: reduceMotion ? 0 : 0.1 }}
+            className="lg:col-span-7 space-y-4 p-6 md:p-8 rounded-xl border border-border bg-background"
           >
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="contact-name" className="text-xs text-muted-foreground mb-1.5 block">Name</label>
-                <Input id="contact-name" name="name" placeholder="Your name" required className="bg-background rounded-lg" />
+                <label htmlFor="contact-name" className="text-xs text-muted-foreground mb-1.5 block">
+                  Name
+                </label>
+                <Input
+                  id="contact-name"
+                  name="name"
+                  placeholder="Your name"
+                  required
+                  className="bg-card rounded-md"
+                />
               </div>
               <div>
-                <label htmlFor="contact-email" className="text-xs text-muted-foreground mb-1.5 block">Email</label>
-                <Input id="contact-email" name="email" type="email" placeholder="you@company.com" required className="bg-background rounded-lg" />
+                <label htmlFor="contact-email" className="text-xs text-muted-foreground mb-1.5 block">
+                  Email
+                </label>
+                <Input
+                  id="contact-email"
+                  name="email"
+                  type="email"
+                  placeholder="you@company.com"
+                  required
+                  className="bg-card rounded-md"
+                />
               </div>
             </div>
             <div>
-              <label htmlFor="contact-subject" className="text-xs text-muted-foreground mb-1.5 block">Subject</label>
-              <Input id="contact-subject" name="subject" placeholder="Project inquiry" required className="bg-background rounded-lg" />
+              <label htmlFor="contact-subject" className="text-xs text-muted-foreground mb-1.5 block">
+                Subject
+              </label>
+              <Input
+                id="contact-subject"
+                name="subject"
+                placeholder="Project inquiry"
+                required
+                className="bg-card rounded-md"
+              />
             </div>
             <div>
-              <label htmlFor="contact-message" className="text-xs text-muted-foreground mb-1.5 block">Message</label>
+              <label htmlFor="contact-message" className="text-xs text-muted-foreground mb-1.5 block">
+                Message
+              </label>
               <textarea
                 id="contact-message"
                 name="message"
                 placeholder="Tell me about your project..."
                 required
                 rows={4}
-                className="flex w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
+                className="flex w-full rounded-md border border-input bg-card px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
               />
             </div>
-            <Button
-              type="submit"
-              disabled={sending}
-              className="w-full bg-primary text-primary-foreground hover:brightness-110 rounded-lg"
-            >
+            <button type="submit" disabled={sending} className="btn-primary w-full">
               {sending ? "Sending..." : "Send Message"}
-              <Send size={14} className="ml-2" />
-            </Button>
+              <Send size={14} />
+            </button>
           </motion.form>
         </div>
       </div>

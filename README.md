@@ -6,13 +6,12 @@ A high-performance developer portfolio with live AI-powered demo tools, built wi
 
 - **Single-page portfolio** — Hero, About, Projects (with Case Study modals), Skills, and Contact sections
 - **Light / Dark mode** — System-aware theme toggle with `localStorage` persistence
-- **4 Live AI Demo tools** — Code Reviewer, Content Studio, Sentiment Analyzer, Translation Hub
+- **Live AI Demo tools** — Code Reviewer, Content Studio, Sentiment Analyzer, Translation Hub
 - **Streaming AI responses** — Powered by Groq via Supabase Edge Functions
 - **Markdown rendering** — AI responses rendered with `react-markdown` and syntax highlighting
 - **History tracking** — Every AI generation is saved to Supabase and browsable from a sidebar
 - **"Hire Me" AI Chatbot** — Floating widget trained on my resume that answers recruiter questions
-- **3D Hero background** — Interactive particle field built with Three.js and `@react-three/fiber`
-- **Anti-slop design** — Instrument Serif + Geist font pairing, warm amber-gold palette, editorial layout
+- **Anti-slop design** — Instrument Serif + Geist pairing, warm amber on warm neutrals, paper grain, editorial layout
 
 ## 🛠️ Tech Stack
 
@@ -21,7 +20,6 @@ A high-performance developer portfolio with live AI-powered demo tools, built wi
 | **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Framer Motion |
 | **AI Engine** | Groq API (`openai/gpt-oss-20b`) via Supabase Edge Functions |
 | **Backend** | Supabase (PostgreSQL + Edge Functions) |
-| **3D Graphics** | Three.js, @react-three/fiber v8 |
 | **Routing** | React Router DOM v6 |
 
 ## 🚀 Getting Started
@@ -95,10 +93,9 @@ src/
 │   ├── Navbar.tsx            # Navigation with theme toggle
 │   ├── ThemeToggle.tsx       # Light/dark mode switcher
 │   ├── HeroSection.tsx       # Left-aligned editorial hero
-│   ├── HeroBackground.tsx    # Three.js 3D particle field
-│   ├── AboutSection.tsx      # Bio with skill highlight cards
+│   ├── AboutSection.tsx      # Bio with skill highlight list
 │   ├── ProjectsSection.tsx   # Case study modals + demo links
-│   ├── SkillsSection.tsx     # Tech stack grid with stats
+│   ├── SkillsSection.tsx     # Weighted tech stack + stats
 │   ├── ContactSection.tsx    # Contact form + info
 │   ├── AIChatWidget.tsx      # Floating "Hire Me" AI chatbot
 │   └── ui/                   # shadcn/ui primitives
