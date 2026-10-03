@@ -31,6 +31,22 @@ alter table public.generations enable row level security;
 alter table public.chat_logs enable row level security;
 alter table public.contact_messages enable row level security;
 
+-- Drop any pre-existing policies so re-running this file is safe and so
+-- older, more permissive policies cannot linger.
+do $$
+declare
+  pol record;
+begin
+  for pol in
+    select policyname, tablename
+    from pg_policies
+    where schemaname = 'public'
+      and tablename in ('generations', 'chat_logs', 'contact_messages')
+  loop
+    execute format('drop policy %I on public.%I', pol.policyname, pol.tablename);
+  end loop;
+end $$;
+
 -- Demo history is public by design: anyone can add to it and browse it.
 create policy "anon can insert generations"
   on public.generations for insert to anon with check (true);
