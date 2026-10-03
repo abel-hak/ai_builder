@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties } from "react";
 import { ArrowLeft, Code2, Loader2, Sparkles, Copy, Check, History, ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { streamAI } from "@/lib/ai-stream";
@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { supabase } from "@/lib/supabase";
+import { supabase, type Generation } from "@/lib/supabase";
 import MonacoEditor from "@monaco-editor/react";
 
 const LANGUAGES = [
@@ -100,7 +100,7 @@ const CodeReviewDemo = () => {
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [history, setHistory] = useState<any[]>([]);
+  const [history, setHistory] = useState<Generation[]>([]);
   const [score, setScore] = useState<number | null>(null);
   const [showLangDropdown, setShowLangDropdown] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
@@ -148,6 +148,7 @@ const CodeReviewDemo = () => {
       },
       onDone: async () => {
         setLoading(false);
+        if (!result.trim()) return;
         const { error } = await supabase.from("generations").insert({
           type: "code-review",
           input_text: code,
@@ -328,15 +329,14 @@ const CodeReviewDemo = () => {
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{
-                        code({ node, inline, className, children, ...props }: any) {
+                        code({ node, className, children, ...props }) {
                           const match = /language-(\w+)/.exec(className || "");
-                          return !inline && match ? (
+                          return match ? (
                             <SyntaxHighlighter
-                              style={vscDarkPlus as any}
+                              style={vscDarkPlus as Record<string, CSSProperties>}
                               language={match[1]}
                               PreTag="div"
                               customStyle={{ borderRadius: "0.5rem", fontSize: "12px" }}
-                              {...props}
                             >
                               {String(children).replace(/\n$/, "")}
                             </SyntaxHighlighter>

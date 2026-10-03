@@ -44,9 +44,10 @@ const AIChatWidget = () => {
       },
       onDone: async () => {
         setIsLoading(false);
+        if (!assistantContent.trim()) return;
         // Log the interaction silently to Supabase
         await supabase.from("chat_logs").insert({
-          user_message: input.trim(),
+          user_message: userMsg.content,
           ai_response: assistantContent
         });
       },

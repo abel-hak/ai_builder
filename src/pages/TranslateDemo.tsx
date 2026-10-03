@@ -3,7 +3,7 @@ import { ArrowLeft, Languages, Loader2, Sparkles, Copy, Check, History, ArrowRig
 import { Link } from "react-router-dom";
 import { streamAI } from "@/lib/ai-stream";
 import { toast } from "sonner";
-import { supabase } from "@/lib/supabase";
+import { supabase, type Generation } from "@/lib/supabase";
 
 const languages = [
   { code: "en", label: "English", flag: "🇬🇧" },
@@ -28,7 +28,7 @@ const TranslateDemo = () => {
   const [pronunciation, setPronunciation] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<"source" | "target" | null>(null);
-  const [history, setHistory] = useState<any[]>([]);
+  const [history, setHistory] = useState<Generation[]>([]);
   const outputRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { fetchHistory(); }, []);
@@ -76,6 +76,7 @@ Text to translate:
       },
       onDone: async () => {
         setLoading(false);
+        if (!result.trim()) return;
         const { error } = await supabase.from("generations").insert({
           type: "translate",
           input_text: `[${sourceLang}→${targetLang}] ${sourceText}`,

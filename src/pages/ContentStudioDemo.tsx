@@ -5,7 +5,7 @@ import { streamAI } from "@/lib/ai-stream";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { supabase } from "@/lib/supabase";
+import { supabase, type Generation } from "@/lib/supabase";
 
 const templates = [
   { id: "blog", label: "Blog Post", icon: FileText, prompt: "Write a compelling, well-structured blog post about" },
@@ -37,7 +37,7 @@ const ContentStudioDemo = () => {
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [history, setHistory] = useState<any[]>([]);
+  const [history, setHistory] = useState<Generation[]>([]);
   const outputRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { fetchHistory(); }, []);
@@ -78,6 +78,7 @@ Format: Use markdown formatting. Make it publication-ready and compelling.`;
       onDelta: (chunk) => { result += chunk; setOutput(result); },
       onDone: async () => {
         setLoading(false);
+        if (!result.trim()) return;
         const { error } = await supabase.from("generations").insert({
           type: "content-studio",
           input_text: `[${template.label}] ${topic}`,

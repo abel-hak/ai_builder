@@ -5,7 +5,7 @@ import { streamAI } from "@/lib/ai-stream";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { supabase } from "@/lib/supabase";
+import { supabase, type Generation } from "@/lib/supabase";
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, PolarRadiusAxis } from "recharts";
 
 const samples = [
@@ -213,7 +213,7 @@ const SentimentDemo = () => {
   const [analysis, setAnalysis] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [history, setHistory] = useState<any[]>([]);
+  const [history, setHistory] = useState<Generation[]>([]);
   const outputRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { fetchHistory(); }, []);
@@ -270,6 +270,7 @@ Text to analyze:
       onDelta: (chunk) => { result += chunk; setAnalysis(result); },
       onDone: async () => {
         setLoading(false);
+        if (!result.trim()) return;
         const { error } = await supabase.from("generations").insert({ type: "sentiment", input_text: text, output_text: result });
         if (!error) fetchHistory();
       },
@@ -283,7 +284,6 @@ Text to analyze:
   // Highlight source text with detected phrases
   const getHighlightedText = () => {
     if (!sentimentData || sentimentData.highlights.length === 0) return null;
-    let highlighted = text;
     const parts: { text: string; type: "positive" | "negative" | "none" }[] = [];
 
     // Build a simple highlighted version
