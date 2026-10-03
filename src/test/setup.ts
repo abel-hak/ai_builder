@@ -20,6 +20,21 @@ vi.mock("@/lib/ai-stream", () => ({
   }),
 }));
 
+// jsdom has no IntersectionObserver, which framer-motion's useInView needs.
+class IntersectionObserverStub {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return [];
+  }
+}
+
+Object.defineProperty(window, "IntersectionObserver", {
+  writable: true,
+  value: IntersectionObserverStub,
+});
+
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: (query: string) => ({

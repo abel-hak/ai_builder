@@ -4,6 +4,7 @@ import { Send, Mail, MapPin, Phone } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 const ContactSection = () => {
   const ref = useRef(null);
@@ -11,14 +12,31 @@ const ContactSection = () => {
   const { toast } = useToast();
   const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
     setSending(true);
-    setTimeout(() => {
-      setSending(false);
-      toast({ title: "Message sent!", description: "I'll get back to you soon." });
-      (e.target as HTMLFormElement).reset();
-    }, 1000);
+    const { error } = await supabase.from("contact_messages").insert({
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      subject: String(formData.get("subject") ?? ""),
+      message: String(formData.get("message") ?? ""),
+    });
+    setSending(false);
+
+    if (error) {
+      toast({
+        title: "Message not sent",
+        description: "Something went wrong. Please email erddunoabel47@gmail.com directly.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({ title: "Message sent!", description: "I'll get back to you soon." });
+    form.reset();
   };
 
   return (
@@ -81,21 +99,23 @@ const ContactSection = () => {
           >
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block">Name</label>
-                <Input placeholder="Your name" required className="bg-background rounded-lg" />
+                <label htmlFor="contact-name" className="text-xs text-muted-foreground mb-1.5 block">Name</label>
+                <Input id="contact-name" name="name" placeholder="Your name" required className="bg-background rounded-lg" />
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block">Email</label>
-                <Input type="email" placeholder="you@company.com" required className="bg-background rounded-lg" />
+                <label htmlFor="contact-email" className="text-xs text-muted-foreground mb-1.5 block">Email</label>
+                <Input id="contact-email" name="email" type="email" placeholder="you@company.com" required className="bg-background rounded-lg" />
               </div>
             </div>
             <div>
-              <label className="text-xs text-muted-foreground mb-1.5 block">Subject</label>
-              <Input placeholder="Project inquiry" required className="bg-background rounded-lg" />
+              <label htmlFor="contact-subject" className="text-xs text-muted-foreground mb-1.5 block">Subject</label>
+              <Input id="contact-subject" name="subject" placeholder="Project inquiry" required className="bg-background rounded-lg" />
             </div>
             <div>
-              <label className="text-xs text-muted-foreground mb-1.5 block">Message</label>
+              <label htmlFor="contact-message" className="text-xs text-muted-foreground mb-1.5 block">Message</label>
               <textarea
+                id="contact-message"
+                name="message"
                 placeholder="Tell me about your project..."
                 required
                 rows={4}
