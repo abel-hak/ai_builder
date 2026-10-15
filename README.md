@@ -25,7 +25,7 @@ A live product sample of four AI tools (code review, content studio, sentiment, 
 
 ## 🚀 Getting Started
 
-Requires **Node.js 20** and **npm**. Do not use bun or yarn — this repo ships a single `package-lock.json`.
+Requires **Node.js 24** and **npm**. Do not use bun or yarn — this repo ships a single `package-lock.json`.
 
 ```sh
 # 1. Clone the repo
